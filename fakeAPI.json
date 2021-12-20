@@ -1,0 +1,49 @@
+{
+    "GET": {
+        "users": {
+            "path": "users",
+            "query": "users/*"
+        },
+        "user": {
+            "path": "user/{id}",
+            "query": "users/{id}"
+        }
+    },
+    "POST": {
+        "createUser": {
+            "path": "createUser",
+            "query": "users",
+            "body": {
+                "id": 1, 
+                "name": "",
+                "lastName":""
+            }
+        }
+    },
+    "PUT": {
+        "updateUser": {
+            "path": "updateUser",
+            "query": "users/{id}",
+            "body": {
+                "id": 1
+            }
+        }
+    },
+    "DELETE": {
+        "deleteUser": {
+            "path": "deleteUser/{id}",
+            "query": "users/{id}"
+        }
+    },
+    "DATA": {
+        "users": [
+            {"id": 1, "name": "Salih", "lastName": "Onder"},
+            {"id": 2, "name": "Semih", "lastName": "Onder"}
+        ]
+},
+    "SETTING": {
+        "name": "api",
+        "version": "v1",
+        "port": 3000
+    }
+}
