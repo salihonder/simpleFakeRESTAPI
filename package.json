@@ -1,16 +1,20 @@
 {
-  "name": "fakeapi",
-  "version": "1.0.0",
-  "description": "",
+  "name": "simplefakeapi",
+  "version": "1.1.0",
+  "description": "Creates a simple fake REST API from a single json file.",
   "main": "cli.js",
   "bin": {
     "fakeapi": "./cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cp ./fakeAPI.json $INIT_CWD"
+    "postinstall": "cp ./fakeAPI.json $INIT_CWD",
+    "prettier": "prettier *.js --write"
   },
   "keywords": [],
-  "author": "",
-  "license": "MIT"
+  "author": "Salih Onder",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.5.1"
+  }
 }
