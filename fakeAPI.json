@@ -1,49 +1,87 @@
 {
     "GET": {
         "users": {
-            "path": "users",
-            "query": "users/*"
+            "users": "users/{*}"    
         },
-        "user": {
-            "path": "user/{id}",
-            "query": "users/{id}"
+        "user/{id}": {
+            "user": "users/{id}[name]"
+        },
+        "all": {
+            "users": "users/{*}",
+            "departments": "departments/{*}"
+        },
+        "usernames": {
+            "users": "users/{*}[name]"
+        },
+        "itusers/{dip}": {
+            "users": "users/{dip}[name]: Object"
+        },
+        "departments": {
+            "departments": "departments/{*}[department]: Array"
         }
+        
     },
     "POST": {
         "createUser": {
-            "path": "createUser",
-            "query": "users",
+            "result": { "message" : "created" } ,
+            "where": "users/{*}",
             "body": {
                 "id": 1, 
-                "name": "",
-                "lastName":""
+                "name": "name",
+                "lastName":"lastName"
             }
         }
     },
     "PUT": {
         "updateUser": {
-            "path": "updateUser",
-            "query": "users/{id}",
+            "result": { "message" : "updated" } ,
+            "where": "users/{id}",
             "body": {
                 "id": 1
             }
         }
     },
     "DELETE": {
-        "deleteUser": {
-            "path": "deleteUser/{id}",
-            "query": "users/{id}"
+        "deleteUser/{id}": {
+            "result": { "message" : "deleted" } ,
+            "where": "users/{id}"
+        }
+    },
+    "ERROR": {
+        "404": {
+            "code": "404",
+            "messages": [
+                {
+                    "type": "Error",
+                    "message": "Invalid Id"
+                }
+            ]
+        },
+        "500": {
+            "code": "500",
+            "messages": [
+                {
+                    "type": "Error",
+                    "message": "Not exist"
+                }
+            ]
         }
     },
     "DATA": {
+        "departments": {
+            "1": {"id": 1, "department": "IT"},
+            "2": {"id": 2, "department": "HR"}
+        },
         "users": [
-            {"id": 1, "name": "Salih", "lastName": "Onder"},
-            {"id": 2, "name": "Semih", "lastName": "Onder"}
+            {"id": 1, "name": "Salih", "lastName": "Onder", "dip": 1},
+            {"id": 2, "name": "Semih", "lastName": "Onder", "dip": 1},
+            {"id": 3, "name": "Sinan", "lastName": "Onder", "dip": 2}
         ]
 },
     "SETTING": {
-        "name": "api",
-        "version": "v1",
+        "name": "systemtest",
+        "version": "",
+        "versionNumber": "1.0.0",
         "port": 3000
     }
 }

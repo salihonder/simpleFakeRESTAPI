@@ -1,200 +1,320 @@
 #!/usr/bin/env node
 
 // node modules
-const http = require('http');
-const events = require('events');
-const path = require('path');
+const http = require('http')
+const events = require('events')
+const path = require('path')
 
 // custom modules
-const utils = require('./utils.js');
-const appRoot = path.resolve('');
+const utils = require('./utils.js')
+const appRoot = path.resolve('')
 
 // API file for data, endpoints and settings
-const API = require(`${appRoot}/fakeAPI.json`);
+const API = require(`${appRoot}/fakeAPI.json`)
+const { name, version, versionNumber } = API.SETTING
 
 // Emitter for routing
-const myEmitter = new events.EventEmitter();
+const myEmitter = new events.EventEmitter()
 
 // Listen Requests
 const requestListener = (request, response) => {
     try {
-        const {method, url} = request;
-        let body = '';
+        const { method, url } = request
+        let body = ''
 
         request.on('data', function (data) {
-            body += data;
-
-        });
+            body += data
+        })
         request.on('end', function () {
- 
-            console.log("BODY:"+body);
-            // Dispatch
-        myEmitter.emit(method, url, response, body ? JSON.parse(body) : {});
-        });
-        
+            console.log('BODY: ' + body)
 
-    } catch(err) {
-        console.log(err);
+            // Dispatch
+            myEmitter.emit(method, url, response, body ? JSON.parse(body) : {})
+        })
+    } catch (err) {
+        console.log(err)
     }
-};
+}
 
 // ROUTES
 const GET_Router = (route, response) => {
-    const {name, version} = API.SETTING;
-
-    let isMatch = false;
-    response.writeHead(200, {'Content-Type': 'application/json' });
-
     console.log(`GET: ${route}`);
+    
+    const root = version ? `/${name}/${version}` : `/${name}`
+    const isRoot = root == route || `${root}/` == route ? true : false;
 
-    Object.keys(API.GET).map(endpoint => {
-        
-        if(utils.findEndpoint(route, name, version) === endpoint) {
-            const lookfor = route.split(`/${name}/${version}/${API.GET[endpoint].path.split('/')[0]}/`)[1] || -1;
-         
-            const responseData = utils.queryData(API.DATA, API.GET[endpoint].query, lookfor) || {}
-            response.write(`{"path": "${API.GET[endpoint].path}", "data": ${JSON.stringify(responseData)}}`);
-            response.end();
-            isMatch = true;
+    if(isRoot) {
+        response.writeHead(200, { 'Content-Type': 'text/html' })
+        response.write(`<!doctype html>
+        <html lang="en">
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">  	
+        <link rel="icon" href="data:,">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+        body {
+            padding: 24px
         }
-    })
+        .title {
+            text-transform: capitalize;
+        }
+        .version {
+            position: relative;
+            bottom: 3ex;
+        }.
+        .endpoint {
+            font-weight: bold;
+        }
+        .w3-button {
+            width: 100px;
+        }
+        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
 
-    if(!isMatch) {
-        response.write('{}');
-        response.end();
+        </style>
+        <title>Simple Fake API</title>
+        
+        </head>
+
+        <body>
+        <h1>
+            <span class='title'>${name}</span> API 
+            <span class="version w3-tag w3-tiny w3-dark-grey">${versionNumber}</span>
+        </h1>
+        
+        <hr />
+        <a href='https://www.npmjs.com/package/simplefakeapi'>For documentations click here</a>
+        
+        <h2>${root}</h2>
+        ${Object.keys(API.GET).map(key => `<div class="w3-card w3-margin-bottom w3-light-blue">
+        <button class="w3-button w3-blue">GET</button>
+        <label class="endpoint">${key}</label>
+      </div>`).join('')}
+      ${Object.keys(API.POST).map(key => `<div class="w3-card w3-margin-bottom w3-pale-green">
+        <button class="w3-button w3-green">POST</button>
+        <label class="endpoint">${key}</label>
+      </div>`).join('')}
+      ${Object.keys(API.PUT).map(key => `<div class="w3-card w3-margin-bottom w3-amber">
+        <button class="w3-button w3-orange">PUT</button>
+        <label class="endpoint">${key}</label>
+      </div>`).join('')}
+      ${Object.keys(API.DELETE).map(key => `<div class="w3-card w3-margin-bottom w3-pale-red">
+        <button class="w3-button w3-red">DELETE</button>
+        <label class="endpoint">${key}</label>
+      </div>`).join('')}
+
+       <h2>Data</h2> 
+        <pre>
+        ${utils.syntaxHighlight(JSON.stringify(API.DATA, undefined, 4))}
+        </pre>
+
+        </body>
+        </html>
+        `)
+        
+        response.end()
+    } else {
+        const responseCode = route.split(':')[1];
+
+        if (responseCode) {
+            response.writeHead(responseCode, { 'Content-Type': 'application/json' })
+            response.write(`${JSON.stringify(API.ERROR[responseCode])}`)
+            response.end()
+        } else {
+            let isMatch = false
+            response.writeHead(200, { 'Content-Type': 'application/json' })
+    
+            Object.keys(API.GET).map(endpoint => {
+                if (utils.isEndPointMatch(route, name, version, endpoint)) {
+                    const responseData =
+                        utils.queryData(
+                            name,
+                            version,
+                            API.DATA,
+                            API.GET[endpoint],
+                            endpoint,
+                            route,
+                        ) || {}
+    
+                    response.write(`${JSON.stringify(responseData)}`)
+                    response.end()
+                    isMatch = true
+                }
+            })
+    
+            if (!isMatch) {
+                response.write('{}')
+                response.end()
+            }
+        }
     }
 
-};
+    
+}
 
 const POST_Router = (route, response, body) => {
-    const {name, version} = API.SETTING;
-    let isMatch = false;
+    console.log(`POST: ${route}`)
+    const responseCode = route.split(':')[1]
 
-    response.writeHead(200, {'Content-Type': 'application/json' });
+    if (responseCode) {
+        response.writeHead(responseCode, { 'Content-Type': 'application/json' })
+        response.write(`${JSON.stringify(API.ERROR[responseCode])}`)
+        response.end()
+    } else {
+        let isMatch = false
 
-    console.log(`POST: ${route}`);
+        response.writeHead(200, { 'Content-Type': 'application/json' })
 
-    Object.keys(API.POST).map(endpoint => {
-        
-        if(utils.findEndpoint(route, name, version) === endpoint) {    
-            console.log("endpoint " + endpoint) 
-            // check the post body keys match with endpoint's body map
-            if(utils.isBodyDataMatch(body, API.POST[endpoint].body)) {
-                const data = API.DATA[API.POST[endpoint].query];
-                data.push(body);
-                console.log(data)
-                response.write(`{"path": "${API.POST[endpoint].path}", "data": "created"}`); 
-            } else {
-                response.write(`{"path": "${API.POST[endpoint].path}", "data": "error"}`);
+        Object.keys(API.POST).map(endpoint => {
+            if (utils.isEndPointMatch(route, name, version, endpoint)) {
+                // check the post body keys match with endpoint's body map
+                if (utils.isBodyDataMatch(body, API.POST[endpoint].body)) {
+                    const where = utils.removeBrackets(
+                        API.POST[endpoint].where.split('/')[0],
+                    )
+                    const data = API.DATA[where]
+                    data.push(body)
+
+                    response.write(
+                        `${JSON.stringify(API.POST[endpoint].result)}`,
+                    )
+                } else {
+                    response.write(`{"path": "${endpoint}", "data": "error"}`)
+                }
+
+                response.end()
+                isMatch = true
             }
+        })
 
-            response.end();
-            isMatch = true;
+        if (!isMatch) {
+            response.write('{}')
+            response.end()
         }
-    })
-
-    if(!isMatch) {
-        response.write('{}');
-        response.end();
     }
-
-};
+}
 
 const PUT_Router = (route, response, body) => {
-    const {name, version} = API.SETTING;
-    let isMatch = false;
+    console.log(`PUT: ${route}`)
+    const responseCode = route.split(':')[1]
 
-    response.writeHead(200, {'Content-Type': 'application/json' });
+    if (responseCode) {
+        response.writeHead(responseCode, { 'Content-Type': 'application/json' })
+        response.write(`${JSON.stringify(API.ERROR[responseCode])}`)
+        response.end()
+    } else {
+        let isMatch = false
 
-    console.log(`PUT: ${route}`);
+        response.writeHead(200, { 'Content-Type': 'application/json' })
 
-    Object.keys(API.PUT).map(endpoint => {
-        
-        if(utils.findEndpoint(route, name, version) === endpoint) {    
-            if(utils.isBodyDataMatch( API.PUT[endpoint].body, body)) {
-            console.log("endpoint " + endpoint);
-            console.log("query " + API.PUT[endpoint].query);
+        Object.keys(API.PUT).map(endpoint => {
+            if (utils.isEndPointMatch(route, name, version, endpoint)) {
+                if (utils.isBodyDataMatch(API.PUT[endpoint].body, body)) {
+                    const lookforProperty = API.PUT[endpoint].where
+                        .replace(
+                            API.PUT[endpoint].where.split('/')[0] + '/',
+                            '',
+                        )
+                        .replace(/[{}]/g, '')
 
-            const lookforProperty = API.PUT[endpoint].query
-            .replace(API.PUT[endpoint].query.split('/')[0]+'/','')
-            .replace(/[{}]/g,'');
+                    const lookfor = body[lookforProperty]
 
-            const lookfor = body[lookforProperty]
-            console.log("lookforProperty " + lookforProperty);
-            console.log("lookfor " + lookfor);
-            const responseData = utils.queryData(API.DATA, API.PUT[endpoint].query, lookfor) || {}
-            console.log("responseData ",responseData);
-            const newData = {...responseData[0], ...body}
-            console.log("newData " , newData);
-            utils.updateData(API.DATA, API.PUT[endpoint].query, lookfor, newData)
-           
+                    const responseData =
+                        utils.fetchData(
+                            API.DATA,
+                            API.PUT[endpoint].where,
+                            lookfor,
+                        ) || {}
 
-            
-   
-                response.write(`{"path": "${API.PUT[endpoint].path}", "data": "updated"}`); 
-            } else {
-                response.write(`{"path": "${API.PUT[endpoint].path}", "data": "error: missing property on body"}`);
+                    const newData = { ...responseData[0], ...body }
+
+                    utils.updateData(
+                        API.DATA,
+                        API.PUT[endpoint].where,
+                        lookfor,
+                        newData,
+                    )
+
+                    response.write(
+                        `${JSON.stringify(API.PUT[endpoint].result)}`,
+                    )
+                } else {
+                    response.write(
+                        `{"path": "${API.PUT[endpoint].path}", "data": "error: missing property on body"}`,
+                    )
+                }
+
+                response.end()
+                isMatch = true
             }
+        })
 
-            response.end();
-            isMatch = true;
+        if (!isMatch) {
+            response.write('{}')
+            response.end()
         }
-    })
-
-    if(!isMatch) {
-        response.write('{}');
-        response.end();
     }
-
-};
+}
 
 const DELETE_Router = (route, response) => {
-    const {name, version} = API.SETTING;
+    console.log(`DELETE: ${route}`)
+    const responseCode = route.split(':')[1]
 
-    let isMatch = false;
-    response.writeHead(200, {'Content-Type': 'application/json' });
+    if (responseCode) {
+        response.writeHead(responseCode, { 'Content-Type': 'application/json' })
+        response.write(`${JSON.stringify(API.ERROR[responseCode])}`)
+        response.end()
+    } else {
+        let isMatch = false
+        response.writeHead(200, { 'Content-Type': 'application/json' })
 
-    console.log(`DELETE: ${route}`);
+        Object.keys(API.DELETE).map(endpoint => {
+            if (utils.isEndPointMatch(route, name, version, endpoint)) {
+                const lookfor =
+                    route.split(`${endpoint.split('/')[0]}/`)[1] || -1
 
-    Object.keys(API.DELETE).map(endpoint => {
-        
-        if(utils.findEndpoint(route, name, version) === endpoint) {
+                const result = utils.deleteData(
+                    API.DATA,
+                    API.DELETE[endpoint].where,
+                    lookfor,
+                )
 
-            console.log("endpoint " + endpoint);
-            console.log("query " + API.DELETE[endpoint].query);
+                if (result) {
+                    response.write(
+                        `${JSON.stringify(API.DELETE[endpoint].result)}`,
+                    )
+                } else {
+                    response.write(
+                        `{"path": "${endpoint}", "data": "error on delete"}`,
+                    )
+                }
 
-            const lookfor = route.split(`/${name}/${version}/${API.DELETE[endpoint].path.split('/')[0]}/`)[1] || -1;
-
-            console.log("lookfor " + lookfor);
-           
-            const result = utils.deleteData(API.DATA, API.DELETE[endpoint].query, lookfor)
-            
-            if(result) {
-                response.write(`{"path": "${API.DELETE[endpoint].path}", "data": "deleted"}`); 
-            } else {
-                response.write(`{"path": "${API.DELETE[endpoint].path}", "data": "error on delete"}`);
+                response.end()
+                isMatch = true
             }
+        })
 
-            response.end();
-            isMatch = true;
+        if (!isMatch) {
+            response.write('{}')
+            response.end()
         }
-    })
-
-    if(!isMatch) {
-        response.write('{}');
-        response.end();
     }
+}
 
-};
-
-myEmitter.on('GET', GET_Router);
-myEmitter.on('POST', POST_Router);
-myEmitter.on('PUT', PUT_Router);
-myEmitter.on('DELETE', DELETE_Router);
+myEmitter.on('GET', GET_Router)
+myEmitter.on('POST', POST_Router)
+myEmitter.on('PUT', PUT_Router)
+myEmitter.on('DELETE', DELETE_Router)
 
 // create server
-const server = http.createServer(requestListener);
-const PORT = API.SETTING.port || 4001;
+const server = http.createServer(requestListener)
+const PORT = API.SETTING.port || 4001
 
 // start server
-server.listen(PORT, () => console.log(`Server listening on: http://localhost:${PORT}`));
+server.listen(PORT, () =>
+    console.log(`Server listening on: http://localhost:${PORT}`),
+)

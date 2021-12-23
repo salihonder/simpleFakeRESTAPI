@@ -11,8 +11,13 @@
     "postinstall": "cp ./fakeAPI.json $INIT_CWD",
     "prettier": "prettier *.js --write"
   },
-  "keywords": [],
+  "keywords": ["mockup api","fake api", "mock rest api", "fake rest api"],
   "author": "Salih Onder",
+  "homepage": "https://github.com/salihonder/simpleFakeRESTAPI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salihonder/simpleFakeRESTAPI.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "prettier": "^2.5.1"
