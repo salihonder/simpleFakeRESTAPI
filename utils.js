@@ -19,18 +19,184 @@ function updateData(data, query, lookfor, newData) {
     data[select][itemIndex] = newData
 }
 
-function deleteData(data, query, lookfor) {
+function update2Data(name, version, data, query, endpoint, route, body) {
     const splitArr = query.split('/')
     const select = splitArr[0]
     const where = splitArr[1].replace(/[{}]/g, '')
+    const replaceString = version ? `/${name}/${version}/` : `/${name}/`
 
-    const itemIndex = data[select].findIndex(o => o[where] == lookfor)
-    if (itemIndex > -1) {
-        data[select].splice(itemIndex, 1)
-        return true
+    console.log(splitArr)
+    console.log(`select - ${select}`)
+    console.log(`where - ${where}`)
+    const conditionKeys = where.split(',')
+    const isArray = Array.isArray(data[select])
+
+    route.replace(replaceString, '').split('/')[0] || ''
+    const pathArr = route.replace(replaceString, '').split('/')
+    const endpointArr = endpoint.split('/')
+
+    const params = {}
+
+    // Get parameters
+    endpointArr.map((item, index) => {
+        if (/^{[A-Za-z0-9]*}$/.test(item)) {
+            params[removeBrackets(item)] = pathArr[index]
+        }
+    })
+
+    console.log('pathArr', pathArr)
+    console.log('endpointArr', endpointArr)
+    console.log('params', params)
+
+    try {
+        if (isArray) {
+            const qresult = data[select].map(o => {
+                const shouldUpdate = conditionKeys.every(
+                    conditionKey => o[conditionKey] == params[conditionKey],
+                )
+
+                return shouldUpdate ? { ...o, ...body } : o
+            })
+
+            data[select] = qresult
+
+            console.log(qresult)
+        } else {
+            console.log('OBJ OPERATIONS TO PUT')
+            const resArr = Object.keys(data[select]).map(oID => {
+                const shouldUpdate = conditionKeys.every(
+                    conditionKey =>
+                        data[select][oID][conditionKey] == params[conditionKey],
+                )
+                return shouldUpdate
+                    ? { ...data[select][oID], ...body }
+                    : data[select][oID]
+            })
+            console.log(resArr)
+
+            data[select] = qresult
+        }
+    } catch (e) {
+        return false
     }
 
-    return false
+    return true
+}
+
+function postData(name, version, data, query, endpoint, route, body) {
+    const splitArr = query.split('/')
+    const select = splitArr[0]
+    // const where = splitArr[1].replace(/[{}]/g, '')
+    const replaceString = version ? `/${name}/${version}/` : `/${name}/`
+
+    console.log(splitArr)
+    console.log(`select - ${select}`)
+
+    // const conditionKeys = where.split(',')
+    const isArray = Array.isArray(data[select])
+
+    route.replace(replaceString, '').split('/')[0] || ''
+    const pathArr = route.replace(replaceString, '').split('/')
+    const endpointArr = endpoint.split('/')
+
+    const params = {}
+
+    // Get parameters
+    endpointArr.map((item, index) => {
+        if (/^{[A-Za-z0-9]*}$/.test(item)) {
+            params[removeBrackets(item)] = pathArr[index]
+        }
+    })
+
+    console.log('pathArr', pathArr)
+    console.log('endpointArr', endpointArr)
+    console.log('params', params)
+
+    const uniqueID = Date.now()
+
+    try {
+        if (isArray) {
+            data[select].push({
+                ...params,
+                ...body,
+            })
+            console.log('ITS ARRAY', data[select])
+        } else {
+            console.log('OBJ OPERATIONS TO POST')
+            data[select][uniqueID] = {
+                ...params,
+                ...body,
+            }
+        }
+    } catch (e) {
+        return false
+    }
+
+    return true
+}
+
+function deleteData(name, version, data, query, endpoint, route) {
+    const splitArr = query.split('/')
+    const select = splitArr[0]
+    const where = splitArr[1].replace(/[{}]/g, '')
+    const replaceString = version ? `/${name}/${version}/` : `/${name}/`
+
+    console.log(splitArr)
+    console.log(`select - ${select}`)
+    console.log(`where - ${where}`)
+    const conditionKeys = where.split(',')
+    const isArray = Array.isArray(data[select])
+
+    route.replace(replaceString, '').split('/')[0] || ''
+    const pathArr = route.replace(replaceString, '').split('/')
+    const endpointArr = endpoint.split('/')
+
+    const params = {}
+
+    // Get parameters
+    endpointArr.map((item, index) => {
+        if (/^{[A-Za-z0-9]*}$/.test(item)) {
+            params[removeBrackets(item)] = pathArr[index]
+        }
+    })
+
+    console.log('pathArr', pathArr)
+    console.log('endpointArr', endpointArr)
+    console.log('params', params)
+
+    try {
+        if (isArray) {
+            const qresult = data[select].filter(o => {
+                return conditionKeys.some(
+                    conditionKey => o[conditionKey] != params[conditionKey],
+                )
+            })
+
+            data[select] = qresult
+
+            console.log(qresult)
+        } else {
+            const resArr = Object.keys(data[select]).filter(oID => {
+                return conditionKeys.some(
+                    conditionKey =>
+                        data[select][oID][conditionKey] != params[conditionKey],
+                )
+            })
+            console.log(resArr)
+            console.log('OBJ OPERATIONS TO DELETE')
+
+            const qresult = resArr.reduce(
+                (obj, item) => ({ ...obj, [item]: data[select][item] }),
+                {},
+            )
+
+            data[select] = qresult
+        }
+    } catch (e) {
+        return false
+    }
+
+    return true
 }
 
 function findEndpoint(route, name, version) {
@@ -96,7 +262,6 @@ const filter = (data, syntax, isArray) => {
 }
 const convert = (data, syntax, isArray) => {
     const convertTo = syntax.split(':')[1]
-    
 
     if (convertTo && convertTo.includes('Array')) {
         if (isArray) {
@@ -105,7 +270,6 @@ const convert = (data, syntax, isArray) => {
             return Object.keys(data).map(k => data[k])
         }
     } else if (convertTo && convertTo.includes('Object')) {
-        
         if (isArray) {
             return data.reduce((o, item, i) => {
                 return { ...o, [i + 1]: item }
@@ -133,7 +297,6 @@ function queryData(name, version, data, response, endpoint, route) {
         }
     })
 
-
     const responseKeys = Object.keys(response)
 
     // Prepare query results for each response props
@@ -149,24 +312,22 @@ function queryData(name, version, data, response, endpoint, route) {
                 ? removeBrackets(splitArr[1])
                 : 'constant'
 
-               
-
             if (whereType === '*') {
                 result[responseKeys[index]] = data[select]
 
                 const isArray = Array.isArray(data[select])
 
                 if (isArray) {
-                    const qresult = data[select];
+                    const qresult = data[select]
                     const filterResults = filter(qresult, item, isArray)
-                   
+
                     const convertResults = convert(filterResults, item, isArray)
 
                     result[responseKeys[index]] = convertResults
                 } else {
                     const resArr = Object.keys(data[select]).filter(oID => {
                         return data[select][oID]
-                    });
+                    })
 
                     const qresult = resArr.reduce(
                         (obj, item) => ({ ...obj, [item]: data[select][item] }),
@@ -174,7 +335,7 @@ function queryData(name, version, data, response, endpoint, route) {
                     )
 
                     const filterResults = filter(qresult, item, isArray)
-                   
+
                     const convertResults = convert(filterResults, item, isArray)
 
                     result[responseKeys[index]] = convertResults
@@ -194,7 +355,7 @@ function queryData(name, version, data, response, endpoint, route) {
                         )
                     })
                     const filterResults = filter(qresult, item, isArray)
-                    
+
                     const convertResults = convert(filterResults, item, isArray)
 
                     result[responseKeys[index]] = convertResults
@@ -213,7 +374,7 @@ function queryData(name, version, data, response, endpoint, route) {
                     )
 
                     const filterResults = filter(qresult, item, isArray)
-                  
+
                     const convertResults = convert(filterResults, item, isArray)
 
                     result[responseKeys[index]] = convertResults
@@ -226,22 +387,28 @@ function queryData(name, version, data, response, endpoint, route) {
 }
 
 function syntaxHighlight(json) {
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
+    json = json
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+    return json.replace(
+        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+        function (match) {
+            var cls = 'number'
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key'
+                } else {
+                    cls = 'string'
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean'
+            } else if (/null/.test(match)) {
+                cls = 'null'
             }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
+            return '<span class="' + cls + '">' + match + '</span>'
+        },
+    )
 }
 
 exports.fetchData = fetchData
@@ -250,6 +417,8 @@ exports.findEndpoint = findEndpoint
 exports.isEndPointMatch = isEndPointMatch
 exports.isBodyDataMatch = isBodyDataMatch
 exports.updateData = updateData
+exports.update2Data = update2Data
 exports.deleteData = deleteData
+exports.postData = postData
 exports.removeBrackets = removeBrackets
 exports.syntaxHighlight = syntaxHighlight

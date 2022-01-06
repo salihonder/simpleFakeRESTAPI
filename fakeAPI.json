@@ -1,14 +1,24 @@
 {
     "GET": {
-        "users": {
-            "users": "users/{*}"    
+        "healthapp": {
+            "healthapp": "healthapp/{*}"
         },
-        "user/{id}": {
-            "user": "users/{id}[name]"
+        "site/{siteId}/status": {
+            "correlationId": "ae8c5b85-97e0-4f55-80e7-6161d67220ae",
+            "tracingId": "A19283745",
+            "siteId": "{siteId}",
+            "systemTests": "systems/{siteId}[systemId,isOnTest,testTypeCode,sequenceId,effectiveDateTime,expirationDateTime,testCategoryCode,message,lastModifiedEmployeeId]"
+        },
+        "site/{siteId}/zones/status": {
+            "correlationId": "ae8c5b85-97e0-4f55-80e7-6161d67220ae",
+            "tracingId": "A19283745",
+            "siteId": "{siteId}",
+            "systemTests": "systems/{siteId}[systemId,zoneId,isOnTest,sequenceId,effectiveDateTime,expirationDateTime,testCategoryCode,message,isClearRestoreRequired]"
         },
         "all": {
             "users": "users/{*}",
-            "departments": "departments/{*}"
+            "departments": "departments/{*}",
+            "systems": "systems/{*}"
         },
         "usernames": {
             "users": "users/{*}[name]"
@@ -19,69 +29,213 @@
         "departments": {
             "departments": "departments/{*}[department]: Array"
         }
-        
     },
     "POST": {
+        "departments": {
+            "result": { "message": "created" },
+            "where": "departments/{*}",
+            "body": {
+                "id": 1,
+                "department": "IT"
+            }
+        },
         "createUser": {
-            "result": { "message" : "created" } ,
+            "result": { "message": "created" },
             "where": "users/{*}",
             "body": {
-                "id": 1, 
+                "id": 1,
                 "name": "name",
-                "lastName":"lastName"
+                "lastName": "lastName"
+            }
+        },
+        "site/{siteId}/system/{systemId}": {
+            "result": {
+                "correlationId": "ae8c5b85-97e0-4f55-80e7-6161d67220ae",
+                "tracingId": "A19283745",
+                "siteId": 706816,
+                "systemId": 29874593
+            },
+            "where": "systems/{*}",
+            "body": {
+                "id": 0,
+                "employeeId": 88105,
+                "comment": "ok",
+                "effectiveDateTime": "2022-02-25T18:35:00-05:00",
+                "expirationDateTime": "2022-12-25T19:35:00-05:00"
             }
         }
     },
     "PUT": {
-        "updateUser": {
-            "result": { "message" : "updated" } ,
-            "where": "users/{id}",
+        "departments/{id}/name/{department}": {
+            "result": { "message": "updated" },
+            "where": "departments/{id,department}",
             "body": {
-                "id": 1
+                "id": 1,
+                "department": "HR"
+            }
+        },
+        "updateUser/{lastName}/department/{dip}": {
+            "result": { "message": "updated" },
+            "where": "users/{dip,lastName}",
+            "body": {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1
+            }
+        },
+        "site/{siteId}/system/{systemId}": {
+            "result": {
+                "correlationId": "ae8c5b85-97e0-4f55-80e7-6161d67220ae",
+                "tracingId": "A19283745",
+                "siteId": 706816,
+                "systemId": 29874593
+            },
+            "where": "systems/{siteId,systemId}",
+            "body": {
+                "sequenceId": 9,
+                "employeeId": 88105,
+                "comment": "ok",
+                "expirationDateTime": "2021-02-25T19:35:00-05:00"
             }
         }
     },
     "DELETE": {
         "deleteUser/{id}": {
-            "result": { "message" : "deleted" } ,
+            "result": { "message": "deleted" },
             "where": "users/{id}"
+        },
+        "site/{siteId}/system/{systemId}": {
+            "result": { "message": "deleted" },
+            "where": "systems/{siteId,systemId}"
+        },
+        "departments/{id}": {
+            "result": { "message": "deleted" },
+            "where": "departments/{id}"
         }
     },
     "ERROR": {
-        "404": {
-            "code": "404",
-            "messages": [
-                {
-                    "type": "Error",
-                    "message": "Invalid Id"
-                }
-            ]
+        "401": {
+            "correlationId": "d5f6fbf8-6774-4a95-9b59-15348943abd4",
+            "tracingId": "A19283745",
+            "status": {
+                "code": "404",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "Invalid Site#"
+                    }
+                ]
+            }
         },
         "500": {
-            "code": "500",
-            "messages": [
-                {
-                    "type": "Error",
-                    "message": "Not exist"
-                }
-            ]
+            "correlationId": "d5f6fbf8-6774-4a95-9b59-15348943abd4",
+            "tracingId": "A19283745",
+            "status": {
+                "code": "500",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "MAS/MMMe is not responding"
+                    }
+                ]
+            }
         }
     },
     "DATA": {
+        "healthapp": {},
+
+        "systems": [
+            {
+                "id": 0,
+                "systemId": 29874593,
+                "zoneId": "1E300",
+                "isOnTest": true,
+                "testTypeCode": "F",
+                "sequenceId": 9,
+                "effectiveDateTime": "2015-02-25T18:35:00-05:00",
+                "expirationDateTime": "2015-02-25T19:35:00-05:00",
+                "testCategoryCode": "1",
+                "message": "OK",
+                "lastModifiedEmployeeId": 88105,
+                "isClearRestoreRequired": false,
+                "siteId": 706816
+            },
+            {
+                "id": 1,
+                "systemId": 29874593,
+                "zoneId": "2",
+                "isOnTest": false,
+                "sequenceId": null,
+                "effectiveDateTime": null,
+                "expirationDateTime": null,
+                "testCategoryCode": null,
+                "message": null,
+                "isClearRestoreRequired": false,
+                "siteId": 706816
+            },
+            {
+                "id": 2,
+                "systemId": 29874593,
+                "zoneId": "4",
+                "isOnTest": false,
+                "sequenceId": null,
+                "effectiveDateTime": null,
+                "expirationDateTime": null,
+                "testCategoryCode": null,
+                "message": null,
+                "isClearRestoreRequired": false,
+                "siteId": 706816
+            },
+            {
+                "id": 3,
+                "systemId": 29874593,
+                "zoneId": "5",
+                "isOnTest": false,
+                "sequenceId": null,
+                "effectiveDateTime": null,
+                "expirationDateTime": null,
+                "testCategoryCode": null,
+                "message": null,
+                "isClearRestoreRequired": false,
+                "siteId": 706816
+            },
+            {
+                "id": 4,
+                "systemId": 29313909,
+                "zoneId": "6",
+                "isOnTest": false,
+                "testTypeCode": null,
+                "sequenceId": null,
+                "effectiveDateTime": null,
+                "expirationDateTime": null,
+                "testCategoryCode": null,
+                "message": null,
+                "siteId": 706816
+            }
+        ],
+
         "departments": {
-            "1": {"id": 1, "department": "IT"},
-            "2": {"id": 2, "department": "HR"}
+            "1": { "id": 1, "department": "IT" },
+            "2": { "id": 2, "department": "HR" },
+            "3": { "id": 2, "department": "HR" }
         },
         "users": [
-            {"id": 1, "name": "Salih", "lastName": "Onder", "dip": 1},
-            {"id": 2, "name": "Semih", "lastName": "Onder", "dip": 1},
-            {"id": 3, "name": "Sinan", "lastName": "Onder", "dip": 2}
+            { "id": 1, "name": "Salih", "lastName": "Onder", "dip": 1 },
+            { "id": 2, "name": "Semih", "lastName": "Onder", "dip": 1 },
+            { "id": 3, "name": "Sinan", "lastName": "Onder", "dip": 2 }
         ]
-},
+    },
     "SETTING": {
         "name": "systemtest",
         "version": "",
         "versionNumber": "1.0.0",
+        "headers": ["tracing_id"],
+        "authenticate": {
+            "username": "username",
+            "password": "password",
+            "result": { "id": 1, "name": "name", "lastName": "lastName" }
+        },
         "port": 3000
     }
 }
