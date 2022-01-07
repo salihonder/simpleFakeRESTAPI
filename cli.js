@@ -20,7 +20,6 @@ const myEmitter = new events.EventEmitter()
 const requestListener = (request, response) => {
     try {
         const { method, url, headers } = request
-        console.log('headers', headers)
         let body = ''
 
         request.on('data', function (data) {
@@ -97,6 +96,10 @@ const GET_Router = (route, response, body, headers) => {
         <a href='https://www.npmjs.com/package/simplefakeapi'>For documentations click here</a>
 
         <h2>${root}</h2>
+        <div class="w3-card w3-margin-bottom w3-light-blue">
+        <button class="w3-button w3-blue">GET</button>
+        <label class="endpoint">authenticate</label>
+      </div>
         ${Object.keys(API.GET)
             .map(
                 key => `<div class="w3-card w3-margin-bottom w3-light-blue">
@@ -159,8 +162,6 @@ const GET_Router = (route, response, body, headers) => {
             const [username, password] = Buffer.from(encodedAuth, 'base64')
                 .toString()
                 .split(':')
-
-            console.log(`username ${username} - password ${password}`)
 
             if (
                 username == API.SETTING.authenticate.username &&
@@ -252,16 +253,6 @@ const POST_Router = (route, response, body, headers) => {
                 if (utils.isEndPointMatch(route, name, version, endpoint)) {
                     // check the post body keys match with endpoint's body map
                     if (utils.isBodyDataMatch(body, API.POST[endpoint].body)) {
-                        // const where = utils.removeBrackets(
-                        //     API.POST[endpoint].where.split('/')[0],
-                        // )
-                        // const data = API.DATA[where]
-                        // data.push(body)
-
-                        // response.write(
-                        //     `${JSON.stringify(API.POST[endpoint].result)}`,
-                        // )
-
                         const result = utils.postData(
                             name,
                             version,
@@ -327,32 +318,7 @@ const PUT_Router = (route, response, body, headers) => {
             Object.keys(API.PUT).map(endpoint => {
                 if (utils.isEndPointMatch(route, name, version, endpoint)) {
                     if (utils.isBodyDataMatch(API.PUT[endpoint].body, body)) {
-                        // const lookforProperty = API.PUT[endpoint].where
-                        //     .replace(
-                        //         API.PUT[endpoint].where.split('/')[0] + '/',
-                        //         '',
-                        //     )
-                        //     .replace(/[{}]/g, '')
-
-                        // const lookfor = body[lookforProperty]
-                        // console.log(lookfor)
-                        // const responseData =
-                        //     utils.fetchData(
-                        //         API.DATA,
-                        //         API.PUT[endpoint].where,
-                        //         lookfor,
-                        //     ) || {}
-
-                        // const newData = { ...responseData[0], ...body }
-
-                        // utils.updateData(
-                        //     API.DATA,
-                        //     API.PUT[endpoint].where,
-                        //     lookfor,
-                        //     newData,
-                        // )
-
-                        const result = utils.update2Data(
+                        const result = utils.updateData(
                             name,
                             version,
                             API.DATA,
@@ -362,9 +328,15 @@ const PUT_Router = (route, response, body, headers) => {
                             body,
                         )
 
-                        response.write(
-                            `${JSON.stringify(API.PUT[endpoint].result)}`,
-                        )
+                        if (result) {
+                            response.write(
+                                `${JSON.stringify(API.PUT[endpoint].result)}`,
+                            )
+                        } else {
+                            response.write(
+                                `{"path": "${endpoint}", "data": "error on update"}`,
+                            )
+                        }
                     } else {
                         response.write(
                             `{"path": "${API.PUT[endpoint].path}", "data": "error: missing property on body"}`,
@@ -452,6 +424,10 @@ const server = http.createServer(requestListener)
 const PORT = API.SETTING.port || 4001
 
 // start server
-server.listen(PORT, () =>
-    console.log(`Server listening on: http://localhost:${PORT}`),
-)
+server.listen(PORT, () => {
+    console.log(`======================`)
+    console.log(`Simple Fake API v1.2.0`)
+    console.log(`======================`)
+    console.log(`Server listening on: http://localhost:${PORT}`)
+    console.log('Press Ctrl + C to exit')
+})

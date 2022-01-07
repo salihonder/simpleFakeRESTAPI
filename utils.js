@@ -1,25 +1,4 @@
-function fetchData(data, query, lookfor) {
-    const splitArr = query.split('/')
-    const select = splitArr[0]
-    const where = splitArr[1].replace(/[{}]/g, '')
-
-    if (where === '*') {
-        return data[select]
-    } else {
-        return data[select].filter(o => o[where] == lookfor)
-    }
-}
-
-function updateData(data, query, lookfor, newData) {
-    const splitArr = query.split('/')
-    const select = splitArr[0]
-    const where = splitArr[1].replace(/[{}]/g, '')
-
-    const itemIndex = data[select].findIndex(o => o[where] == lookfor)
-    data[select][itemIndex] = newData
-}
-
-function update2Data(name, version, data, query, endpoint, route, body) {
+function updateData(name, version, data, query, endpoint, route, body) {
     const splitArr = query.split('/')
     const select = splitArr[0]
     const where = splitArr[1].replace(/[{}]/g, '')
@@ -411,13 +390,11 @@ function syntaxHighlight(json) {
     )
 }
 
-exports.fetchData = fetchData
 exports.queryData = queryData
 exports.findEndpoint = findEndpoint
 exports.isEndPointMatch = isEndPointMatch
 exports.isBodyDataMatch = isBodyDataMatch
 exports.updateData = updateData
-exports.update2Data = update2Data
 exports.deleteData = deleteData
 exports.postData = postData
 exports.removeBrackets = removeBrackets
