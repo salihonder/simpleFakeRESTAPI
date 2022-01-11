@@ -235,8 +235,8 @@ then request it for example like `/path:404`
 
 ### AUTHENTICATION
 
-Basic Authentication is supported. In order to change username and password, modify
-`SETTING.authenticate`
+Basic Authentication is supported. In order to add/remove/update username and password of a user, see
+`DATA.users` section
 
 `http://localhost:3000/systemtest/authenticate`
 
