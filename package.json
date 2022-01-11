@@ -1,6 +1,6 @@
 {
     "name": "simplefakeapi",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Creates a simple fake REST API from a single json file.",
     "main": "cli.js",
     "bin": {
@@ -8,8 +8,7 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "cp ./fakeAPI.json $INIT_CWD",
-        "prettier": "prettier *.js --write"
+        "postinstall": "cp ./fakeAPI.json $INIT_CWD"
     },
     "keywords": [
         "mockup api",
@@ -25,8 +24,5 @@
         "type": "git",
         "url": "https://github.com/salihonder/simpleFakeRESTAPI.git"
     },
-    "license": "MIT",
-    "devDependencies": {
-        "prettier": "^2.5.1"
-    }
+    "license": "MIT"
 }
