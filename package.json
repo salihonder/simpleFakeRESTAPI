@@ -1,6 +1,6 @@
 {
     "name": "simplefakeapi",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Creates a simple fake REST API from a single json file.",
     "main": "cli.js",
     "bin": {
@@ -15,7 +15,9 @@
         "mockup api",
         "fake api",
         "mock rest api",
-        "fake rest api"
+        "fake rest api",
+        "simple api",
+        "simple rest api"
     ],
     "author": "Salih Onder",
     "homepage": "https://github.com/salihonder/simpleFakeRESTAPI",

@@ -84,21 +84,37 @@
             "3": { "id": 3, "department": "ENG" }
         },
         "users": [
-            { "id": 1, "name": "Salih", "lastName": "Onder", "dip": 1 },
-            { "id": 2, "name": "Semih", "lastName": "Onder", "dip": 1 },
-            { "id": 3, "name": "Sinan", "lastName": "Onder", "dip": 2 }
+            {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "salih",
+                "password": "password"
+            },
+            {
+                "id": 2,
+                "name": "Semih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "semih",
+                "password": "password"
+            },
+            {
+                "id": 3,
+                "name": "Sinan",
+                "lastName": "Onder",
+                "dip": 2,
+                "username": "sinan",
+                "password": "password"
+            }
         ]
     },
     "SETTING": {
         "name": "systemtest",
         "version": "",
         "versionNumber": "1.0.0",
-        "headers": ["tracing_id"],
-        "authenticate": {
-            "username": "username",
-            "password": "password",
-            "result": { "id": 1, "name": "name", "lastName": "lastName" }
-        },
+        "headers": [],
         "port": 3000
     }
 }

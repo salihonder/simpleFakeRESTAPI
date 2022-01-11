@@ -163,22 +163,29 @@ const GET_Router = (route, response, body, headers) => {
                 .toString()
                 .split(':')
 
-            if (
-                username == API.SETTING.authenticate.username &&
-                password == API.SETTING.authenticate.password
-            ) {
-                response.writeHead(200, {
-                    'Content-Type': 'application/json',
-                })
-
-                response.write(
-                    `${JSON.stringify(API.SETTING.authenticate.result)}`,
+            if (API.DATA.users && API.DATA.users.length > 0) {
+                const foundUser = API.DATA.users.find(
+                    u => u.username == username && u.password == password,
                 )
+
+                console.log('Authorized user', foundUser)
+                if (foundUser) {
+                    response.writeHead(200, {
+                        'Content-Type': 'application/json',
+                    })
+
+                    response.write(`${JSON.stringify(foundUser)}`)
+                } else {
+                    response.writeHead(401, {
+                        'Content-Type': 'application/json',
+                    })
+                    response.write(`Unauthorised access`)
+                }
             } else {
                 response.writeHead(401, {
                     'Content-Type': 'application/json',
                 })
-                response.write(`Unauthorised access`)
+                response.write(`Missing users section. Add a user`)
             }
 
             response.end()
@@ -426,7 +433,7 @@ const PORT = API.SETTING.port || 4001
 // start server
 server.listen(PORT, () => {
     console.log(`======================`)
-    console.log(`Simple Fake API v1.2.0`)
+    console.log(`Simple Fake API v1.2.1`)
     console.log(`======================`)
     console.log(`Server listening on: http://localhost:${PORT}`)
     console.log('Press Ctrl + C to exit')
