@@ -135,8 +135,6 @@ const GET_Router = (route, response, body, headers) => {
         </body>
         </html>
         `);
-
-    response.end();
   } else {
     const responseCode = route.split(':')[1];
 
@@ -145,7 +143,6 @@ const GET_Router = (route, response, body, headers) => {
         'Content-Type': 'application/json',
       });
       response.write(`${JSON.stringify(API.ERROR[responseCode])}`);
-      response.end();
     } else if (route == `/${name}/${version}/authenticate` || route == `/${name}/authenticate`) {
       const encodedAuth = (headers.authorization || '').split(' ')[1] || '';
 
@@ -175,8 +172,6 @@ const GET_Router = (route, response, body, headers) => {
         });
         response.write(`Missing users section. Add a user`);
       }
-
-      response.end();
     } else {
       const isAllHeadersIncluded = API.SETTING.headers.every((h) => headers[h] != null);
 
@@ -186,7 +181,6 @@ const GET_Router = (route, response, body, headers) => {
           `{ "message": "missing header(s)",
                        "headers": ${JSON.stringify(API.SETTING.headers)}}`
         );
-        response.end();
       } else {
         let isMatch = false;
         response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -197,18 +191,19 @@ const GET_Router = (route, response, body, headers) => {
               utils.queryData(name, version, API.DATA, API.GET[endpoint], endpoint, route) || {};
 
             response.write(`${JSON.stringify(responseData)}`);
-            response.end();
+
             isMatch = true;
           }
         });
 
         if (!isMatch) {
           response.write('{}');
-          response.end();
         }
       }
     }
   }
+
+  response.end();
 };
 
 const POST_Router = (route, response, body, headers) => {
@@ -392,7 +387,7 @@ const PORT = API.SETTING.port || 4001;
 // start server
 server.listen(PORT, () => {
   console.log(`======================`);
-  console.log(`Simple Fake API v1.2.2`);
+  console.log(`Simple Fake API v1.2.3`);
   console.log(`======================`);
   console.log(`Server listening on: http://localhost:${PORT}`);
   console.log('Press Ctrl + C to exit');

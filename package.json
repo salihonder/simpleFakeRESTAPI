@@ -1,28 +1,28 @@
 {
-    "name": "simplefakeapi",
-    "version": "1.2.2",
-    "description": "Creates a simple fake REST API from a single json file.",
-    "main": "cli.js",
-    "bin": {
-        "fakeapi": "./cli.js"
-    },
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "cp ./fakeAPI.json $INIT_CWD"
-    },
-    "keywords": [
-        "mockup api",
-        "fake api",
-        "mock rest api",
-        "fake rest api",
-        "simple api",
-        "simple rest api"
-    ],
-    "author": "Salih Onder",
-    "homepage": "https://github.com/salihonder/simpleFakeRESTAPI",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/salihonder/simpleFakeRESTAPI.git"
-    },
-    "license": "MIT"
+  "name": "simplefakeapi",
+  "version": "1.2.3",
+  "description": "Creates a simple fake REST API from a single json file.",
+  "main": "cli.js",
+  "bin": {
+    "fakeapi": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cp ./fakeAPI.json $INIT_CWD"
+  },
+  "keywords": [
+    "mockup api",
+    "fake api",
+    "mock rest api",
+    "fake rest api",
+    "simple api",
+    "simple rest api"
+  ],
+  "author": "Salih Onder",
+  "homepage": "https://github.com/salihonder/simpleFakeRESTAPI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salihonder/simpleFakeRESTAPI.git"
+  },
+  "license": "MIT"
 }
