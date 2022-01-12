@@ -2,14 +2,14 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.2.3-blue)
+![](https://img.shields.io/badge/version-v1.2.4-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
 
 ## Setup
 
-- Make sure you have a fakeAPI.json on your project's root folder
+- Make sure you create a file named fakeAPI.json with content on your project's root folder. You can see the content of the file below.
 - Add script `"fakeapi": "npx fakeapi"` to package.json
 - npm run fakeapi
 
@@ -28,7 +28,7 @@ http://localhost:{port}/{name}
 
 ## Documentation
 
-A file called fakeAPI.json will be created after you installed the package
+Create a file named fakeAPI.json with content same as below
 
 Modify fakeAPI.json base on your API choice
 

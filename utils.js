@@ -32,7 +32,7 @@ function updateData(name, version, data, query, endpoint, route, body) {
 
       data[select] = qresult;
     } else {
-      const resArr = Object.keys(data[select]).map((oID) => {
+      const qresult = Object.keys(data[select]).map((oID) => {
         const shouldUpdate = conditionKeys.every(
           (conditionKey) => data[select][oID][conditionKey] == params[conditionKey]
         );

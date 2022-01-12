@@ -1,14 +1,13 @@
 {
   "name": "simplefakeapi",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Creates a simple fake REST API from a single json file.",
   "main": "cli.js",
   "bin": {
     "fakeapi": "./cli.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cp ./fakeAPI.json $INIT_CWD"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "mockup api",

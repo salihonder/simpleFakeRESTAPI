@@ -16,6 +16,15 @@ const { name, version, versionNumber } = API.SETTING;
 // Emitter for routing
 const myEmitter = new events.EventEmitter();
 
+const responseHeaders = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'OPTIONS, POST, GET, PUT, DELETE',
+  'Access-Control-Max-Age': 2592000,
+  'Access-Control-Allow-Credentials': true,
+  'X-Requested-With': '*',
+};
+
 // Listen Requests
 const requestListener = (request, response) => {
   try {
@@ -140,7 +149,7 @@ const GET_Router = (route, response, body, headers) => {
 
     if (responseCode) {
       response.writeHead(responseCode, {
-        'Content-Type': 'application/json',
+        responseHeaders,
       });
       response.write(`${JSON.stringify(API.ERROR[responseCode])}`);
     } else if (route == `/${name}/${version}/authenticate` || route == `/${name}/authenticate`) {
@@ -156,19 +165,19 @@ const GET_Router = (route, response, body, headers) => {
         console.log('Authorized user', foundUser);
         if (foundUser) {
           response.writeHead(200, {
-            'Content-Type': 'application/json',
+            responseHeaders,
           });
 
           response.write(`${JSON.stringify(foundUser)}`);
         } else {
           response.writeHead(401, {
-            'Content-Type': 'application/json',
+            responseHeaders,
           });
           response.write(`Unauthorised access`);
         }
       } else {
         response.writeHead(401, {
-          'Content-Type': 'application/json',
+          responseHeaders,
         });
         response.write(`Missing users section. Add a user`);
       }
@@ -176,14 +185,14 @@ const GET_Router = (route, response, body, headers) => {
       const isAllHeadersIncluded = API.SETTING.headers.every((h) => headers[h] != null);
 
       if (!isAllHeadersIncluded) {
-        response.writeHead(400, { 'Content-Type': 'application/json' });
+        response.writeHead(400, responseHeaders);
         response.write(
           `{ "message": "missing header(s)",
                        "headers": ${JSON.stringify(API.SETTING.headers)}}`
         );
       } else {
         let isMatch = false;
-        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.writeHead(200, responseHeaders);
 
         Object.keys(API.GET).map((endpoint) => {
           if (utils.isEndPointMatch(route, name, version, endpoint)) {
@@ -211,14 +220,14 @@ const POST_Router = (route, response, body, headers) => {
   const responseCode = route.split(':')[1];
 
   if (responseCode) {
-    response.writeHead(responseCode, { 'Content-Type': 'application/json' });
+    response.writeHead(responseCode, responseHeaders);
     response.write(`${JSON.stringify(API.ERROR[responseCode])}`);
     response.end();
   } else {
     const isAllHeadersIncluded = API.SETTING.headers.every((h) => headers[h] != null);
 
     if (!isAllHeadersIncluded) {
-      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.writeHead(400, responseHeaders);
       response.write(
         `{ "message": "missing header(s)",
                    "headers": ${JSON.stringify(API.SETTING.headers)}}`
@@ -226,7 +235,7 @@ const POST_Router = (route, response, body, headers) => {
       response.end();
     } else {
       let isMatch = false;
-      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.writeHead(200, responseHeaders);
 
       Object.keys(API.POST).map((endpoint) => {
         if (utils.isEndPointMatch(route, name, version, endpoint)) {
@@ -269,14 +278,14 @@ const PUT_Router = (route, response, body, headers) => {
   const responseCode = route.split(':')[1];
 
   if (responseCode) {
-    response.writeHead(responseCode, { 'Content-Type': 'application/json' });
+    response.writeHead(responseCode, responseHeaders);
     response.write(`${JSON.stringify(API.ERROR[responseCode])}`);
     response.end();
   } else {
     const isAllHeadersIncluded = API.SETTING.headers.every((h) => headers[h] != null);
 
     if (!isAllHeadersIncluded) {
-      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.writeHead(400, responseHeaders);
       response.write(
         `{ "message": "missing header(s)",
                    "headers": ${JSON.stringify(API.SETTING.headers)}}`
@@ -284,7 +293,7 @@ const PUT_Router = (route, response, body, headers) => {
       response.end();
     } else {
       let isMatch = false;
-      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.writeHead(200, responseHeaders);
 
       Object.keys(API.PUT).map((endpoint) => {
         if (utils.isEndPointMatch(route, name, version, endpoint)) {
@@ -328,14 +337,14 @@ const DELETE_Router = (route, response, body, headers) => {
   const responseCode = route.split(':')[1];
 
   if (responseCode) {
-    response.writeHead(responseCode, { 'Content-Type': 'application/json' });
+    response.writeHead(responseCode, responseHeaders);
     response.write(`${JSON.stringify(API.ERROR[responseCode])}`);
     response.end();
   } else {
     const isAllHeadersIncluded = API.SETTING.headers.every((h) => headers[h] != null);
 
     if (!isAllHeadersIncluded) {
-      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.writeHead(400, responseHeaders);
       response.write(
         `{ "message": "missing header(s)",
                    "headers": ${JSON.stringify(API.SETTING.headers)}}`
@@ -343,7 +352,7 @@ const DELETE_Router = (route, response, body, headers) => {
       response.end();
     } else {
       let isMatch = false;
-      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.writeHead(200, responseHeaders);
 
       Object.keys(API.DELETE).map((endpoint) => {
         if (utils.isEndPointMatch(route, name, version, endpoint)) {
@@ -387,7 +396,7 @@ const PORT = API.SETTING.port || 4001;
 // start server
 server.listen(PORT, () => {
   console.log(`======================`);
-  console.log(`Simple Fake API v1.2.3`);
+  console.log(`Simple Fake API v1.2.4`);
   console.log(`======================`);
   console.log(`Server listening on: http://localhost:${PORT}`);
   console.log('Press Ctrl + C to exit');
