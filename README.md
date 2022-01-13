@@ -2,7 +2,7 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.2.4-blue)
+![](https://img.shields.io/badge/version-v1.2.5-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
@@ -13,7 +13,7 @@ Creates a simple fake REST API from a single json file.
 - Add script `"fakeapi": "npx fakeapi"` to package.json
 - npm run fakeapi
 
-Your service will be run on `http://localhost:3000`
+Your service will be run on `http://localhost:4000`
 
 ## Display APIs
 
@@ -135,14 +135,14 @@ Modify fakeAPI.json base on your API choice
       "password": "password",
       "result": { "id": 1, "name": "name", "lastName": "lastName" }
     },
-    "port": 3000
+    "port": 4000
   }
 }
 ```
 
 ### GET
 
-`http://localhost:3000/systemtest/all `
+`http://localhost:4000/systemtest/all `
 
 ```json
 "GET": {
@@ -162,7 +162,7 @@ Modify fakeAPI.json base on your API choice
 
 ### POST
 
-`http://localhost:3000/systemtest/createUser`
+`http://localhost:4000/systemtest/createUser`
 
 ```json
 "POST": {
@@ -184,7 +184,7 @@ Modify fakeAPI.json base on your API choice
 
 ### PUT
 
-`http://localhost:3000/systemtest/users/1/lastname/Onder`
+`http://localhost:4000/systemtest/users/1/lastname/Onder`
 
 ```json
 "PUT": {
@@ -202,7 +202,7 @@ Modify fakeAPI.json base on your API choice
 
 ### DELETE
 
-`http://localhost:3000/systemtest/users/1/lastname/Onder`
+`http://localhost:4000/systemtest/users/1/lastname/Onder`
 
 ```json
 "DELETE": {
@@ -238,7 +238,7 @@ then request it for example like `/path:404`
 Basic Authentication is supported. In order to add/remove/update username and password of a user, see
 `DATA.users` section
 
-`http://localhost:3000/systemtest/authenticate`
+`http://localhost:4000/systemtest/authenticate`
 
 ### HEADERS
 

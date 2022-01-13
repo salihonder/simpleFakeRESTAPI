@@ -25,6 +25,13 @@ const responseHeaders = {
   'X-Requested-With': '*',
 };
 
+const authResponseHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true,
+  'Access-Control-Allow-Methods': 'GET',
+  'Access-Control-Allow-Headers': 'Authorization',
+  'Access-Control-Max-Age': '3600',
+};
 // Listen Requests
 const requestListener = (request, response) => {
   try {
@@ -46,6 +53,11 @@ const requestListener = (request, response) => {
 };
 
 // ROUTES
+const OPTIONS_Router = (route, response, body, headers) => {
+  console.log(`OPTIONS: ${route}`);
+  response.writeHead(204, authResponseHeaders);
+  response.end();
+};
 const GET_Router = (route, response, body, headers) => {
   console.log(`GET: ${route}`);
 
@@ -164,15 +176,11 @@ const GET_Router = (route, response, body, headers) => {
 
         console.log('Authorized user', foundUser);
         if (foundUser) {
-          response.writeHead(200, {
-            responseHeaders,
-          });
+          response.writeHead(200, authResponseHeaders);
 
           response.write(`${JSON.stringify(foundUser)}`);
         } else {
-          response.writeHead(401, {
-            responseHeaders,
-          });
+          response.writeHead(401, authResponseHeaders);
           response.write(`Unauthorised access`);
         }
       } else {
@@ -388,6 +396,7 @@ myEmitter.on('GET', GET_Router);
 myEmitter.on('POST', POST_Router);
 myEmitter.on('PUT', PUT_Router);
 myEmitter.on('DELETE', DELETE_Router);
+myEmitter.on('OPTIONS', OPTIONS_Router);
 
 // create server
 const server = http.createServer(requestListener);
@@ -396,7 +405,7 @@ const PORT = API.SETTING.port || 4001;
 // start server
 server.listen(PORT, () => {
   console.log(`======================`);
-  console.log(`Simple Fake API v1.2.4`);
+  console.log(`Simple Fake API v1.2.5`);
   console.log(`======================`);
   console.log(`Server listening on: http://localhost:${PORT}`);
   console.log('Press Ctrl + C to exit');

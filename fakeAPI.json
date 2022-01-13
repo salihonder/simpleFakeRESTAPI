@@ -1,120 +1,120 @@
 {
-    "GET": {
-        "all": {
-            "users": "users/{*}",
-            "departments": "departments/{*}"
-        },
-        "usernames": {
-            "users": "users/{*}[name]"
-        },
-        "departments/{dip}/lastName/{lastName}": {
-            "users": "users/{dip,lastName}[name]: Object"
-        },
-        "departments": {
-            "departments": "departments/{*}[department]: Array"
-        }
+  "GET": {
+    "all": {
+      "users": "users/{*}",
+      "departments": "departments/{*}"
     },
-    "POST": {
-        "departments": {
-            "result": { "message": "created" },
-            "where": "departments/{*}",
-            "body": {
-                "id": 1,
-                "department": "IT"
-            }
-        },
-        "createUser": {
-            "result": { "message": "created" },
-            "where": "users/{*}",
-            "body": {
-                "id": 1,
-                "name": "name",
-                "lastName": "lastName"
-            }
-        }
+    "usernames": {
+      "users": "users/{*}[name]"
     },
-    "PUT": {
-        "departments/{id}/name/{department}": {
-            "result": { "message": "updated" },
-            "where": "departments/{id,department}",
-            "body": {
-                "id": 1,
-                "department": "HR"
-            }
-        }
+    "departments/{dip}/lastName/{lastName}": {
+      "users": "users/{dip,lastName}[name]: Object"
     },
-    "DELETE": {
-        "deleteUser/{id}": {
-            "result": { "message": "deleted" },
-            "where": "users/{id}"
-        },
-        "departments/{id}": {
-            "result": { "message": "deleted" },
-            "where": "departments/{id}"
-        }
-    },
-    "ERROR": {
-        "401": {
-            "status": {
-                "code": "404",
-                "messages": [
-                    {
-                        "type": "Error",
-                        "message": "Invalid Site#"
-                    }
-                ]
-            }
-        },
-        "500": {
-            "status": {
-                "code": "500",
-                "messages": [
-                    {
-                        "type": "Error",
-                        "message": "MAS/MMMe is not responding"
-                    }
-                ]
-            }
-        }
-    },
-    "DATA": {
-        "departments": {
-            "1": { "id": 1, "department": "IT" },
-            "2": { "id": 2, "department": "HR" },
-            "3": { "id": 3, "department": "ENG" }
-        },
-        "users": [
-            {
-                "id": 1,
-                "name": "Salih",
-                "lastName": "Onder",
-                "dip": 1,
-                "username": "salih",
-                "password": "password"
-            },
-            {
-                "id": 2,
-                "name": "Semih",
-                "lastName": "Onder",
-                "dip": 1,
-                "username": "semih",
-                "password": "password"
-            },
-            {
-                "id": 3,
-                "name": "Sinan",
-                "lastName": "Onder",
-                "dip": 2,
-                "username": "sinan",
-                "password": "password"
-            }
-        ]
-    },
-    "SETTING": {
-        "name": "systemtest",
-        "version": "",
-        "versionNumber": "1.0.0",
-        "headers": [],
-        "port": 3000
+    "departments": {
+      "departments": "departments/{*}[department]: Array"
     }
+  },
+  "POST": {
+    "departments": {
+      "result": { "message": "created" },
+      "where": "departments/{*}",
+      "body": {
+        "id": 1,
+        "department": "IT"
+      }
+    },
+    "createUser": {
+      "result": { "message": "created" },
+      "where": "users/{*}",
+      "body": {
+        "id": 1,
+        "name": "name",
+        "lastName": "lastName"
+      }
+    }
+  },
+  "PUT": {
+    "departments/{id}/name/{department}": {
+      "result": { "message": "updated" },
+      "where": "departments/{id,department}",
+      "body": {
+        "id": 1,
+        "department": "HR"
+      }
+    }
+  },
+  "DELETE": {
+    "deleteUser/{id}": {
+      "result": { "message": "deleted" },
+      "where": "users/{id}"
+    },
+    "departments/{id}": {
+      "result": { "message": "deleted" },
+      "where": "departments/{id}"
+    }
+  },
+  "ERROR": {
+    "401": {
+      "status": {
+        "code": "404",
+        "messages": [
+          {
+            "type": "Error",
+            "message": "Invalid Site#"
+          }
+        ]
+      }
+    },
+    "500": {
+      "status": {
+        "code": "500",
+        "messages": [
+          {
+            "type": "Error",
+            "message": "MAS/MMMe is not responding"
+          }
+        ]
+      }
+    }
+  },
+  "DATA": {
+    "departments": {
+      "1": { "id": 1, "department": "IT" },
+      "2": { "id": 2, "department": "HR" },
+      "3": { "id": 3, "department": "ENG" }
+    },
+    "users": [
+      {
+        "id": 1,
+        "name": "Salih",
+        "lastName": "Onder",
+        "dip": 1,
+        "username": "salih",
+        "password": "password"
+      },
+      {
+        "id": 2,
+        "name": "Semih",
+        "lastName": "Onder",
+        "dip": 1,
+        "username": "semih",
+        "password": "password"
+      },
+      {
+        "id": 3,
+        "name": "Sinan",
+        "lastName": "Onder",
+        "dip": 2,
+        "username": "sinan",
+        "password": "password"
+      }
+    ]
+  },
+  "SETTING": {
+    "name": "systemtest",
+    "version": "",
+    "versionNumber": "1.0.0",
+    "headers": [],
+    "port": 4000
+  }
 }

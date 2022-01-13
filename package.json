@@ -1,6 +1,6 @@
 {
   "name": "simplefakeapi",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Creates a simple fake REST API from a single json file.",
   "main": "cli.js",
   "bin": {
