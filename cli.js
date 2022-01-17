@@ -22,6 +22,7 @@ const responseHeaders = {
   'Access-Control-Allow-Methods': 'OPTIONS, POST, GET, PUT, DELETE',
   'Access-Control-Max-Age': 2592000,
   'Access-Control-Allow-Credentials': true,
+  'Access-Control-Allow-Headers': 'Authorization,Content-Type',
   'X-Requested-With': '*',
 };
 
@@ -29,7 +30,7 @@ const authResponseHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': true,
   'Access-Control-Allow-Methods': 'GET',
-  'Access-Control-Allow-Headers': 'Authorization',
+  'Access-Control-Allow-Headers': 'Authorization,Content-Type',
   'Access-Control-Max-Age': '3600',
 };
 // Listen Requests
@@ -43,9 +44,22 @@ const requestListener = (request, response) => {
     });
     request.on('end', function () {
       console.log('BODY: ' + body);
+      let parsedBody = {};
 
-      // Dispatch
-      myEmitter.emit(method, url, response, body ? JSON.parse(body) : {}, headers);
+      if (body) {
+        try {
+          parsedBody = JSON.parse(body);
+          // Dispatch
+          myEmitter.emit(method, url, response, parsedBody, headers);
+        } catch (e) {
+          console.log(e);
+          response.write(`{"error": "Correct JSON body format"}`);
+          response.end();
+        }
+      } else {
+        // Dispatch
+        myEmitter.emit(method, url, response, parsedBody, headers);
+      }
     });
   } catch (err) {
     console.log(err);
@@ -55,7 +69,7 @@ const requestListener = (request, response) => {
 // ROUTES
 const OPTIONS_Router = (route, response, body, headers) => {
   console.log(`OPTIONS: ${route}`);
-  response.writeHead(204, authResponseHeaders);
+  response.writeHead(204, responseHeaders);
   response.end();
 };
 const GET_Router = (route, response, body, headers) => {
@@ -405,7 +419,7 @@ const PORT = API.SETTING.port || 4001;
 // start server
 server.listen(PORT, () => {
   console.log(`======================`);
-  console.log(`Simple Fake API v1.2.5`);
+  console.log(`Simple Fake API v1.2.6`);
   console.log(`======================`);
   console.log(`Server listening on: http://localhost:${PORT}`);
   console.log('Press Ctrl + C to exit');

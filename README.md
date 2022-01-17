@@ -2,7 +2,7 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.2.5-blue)
+![](https://img.shields.io/badge/version-v1.2.6-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
@@ -232,6 +232,85 @@ in order to make 404 etc responses, create a section under `ERROR` in fakeAPI.js
 ```
 
 then request it for example like `/path:404`
+
+### REQUEST EXAMPLES
+
+```js
+// FETCH
+
+fetch('http://localhost:4000/systemtest/all')
+  .then((res) => res.json())
+  .then((res) => console.log(res));
+
+const credentials = 'sinan:password';
+fetch('http://localhost:4000/systemtest/authenticate', {
+  headers: new Headers({
+    Authorization: 'Basic ' + btoa(credentials),
+  }),
+})
+  .then((res) => res.json())
+  .then((res) => console.log(res));
+
+fetch('http://localhost:4000/systemtest/createUser', {
+  method: 'POST',
+  body: JSON.stringify({
+    id: 6,
+    name: 'new user',
+    lastName: 'new lastName',
+  }),
+})
+  .then((res) => res.json())
+  .then((res) => console.log(res));
+
+fetch('http://localhost:4000/systemtest/updateUser/2', {
+  method: 'PUT',
+  body: JSON.stringify({
+    name: 'name1',
+    lastName: 'lastName1',
+    password: 'password1',
+  }),
+})
+  .then((res) => res.json())
+  .then((res) => console.log(res));
+
+fetch('http://localhost:4000/systemtest/deleteUser/1', {
+  method: 'DELETE',
+})
+  .then((res) => res.json())
+  .then((res) => console.log(res));
+
+//AXIOS
+
+axios('http://localhost:4000/systemtest/all').then((res) => console.log(res.data));
+
+const credentials = 'sinan:password';
+axios('http://localhost:4000/systemtest/authenticate', {
+  headers: {
+    Authorization: 'Basic ' + btoa(credentials),
+  },
+}).then((res) => console.log(res.data));
+
+axios
+  .post('http://localhost:4000/systemtest/createUser', {
+    id: 7,
+    name: 'new user',
+    lastName: 'new lastName',
+  })
+  .then((res) => console.log(res.data));
+
+axios
+  .put('http://localhost:4000/systemtest/updateUser/2', {
+    name: 'name1',
+    lastName: 'lastName1',
+    password: 'password1',
+  })
+  .then((res) => console.log(res.data));
+
+axios({
+  method: 'delete',
+  url: 'http://localhost:4000/systemtest/deleteUser/1',
+});
+```
 
 ### AUTHENTICATION
 

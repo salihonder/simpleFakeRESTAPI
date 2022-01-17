@@ -41,6 +41,15 @@
         "id": 1,
         "department": "HR"
       }
+    },
+    "updateUser/{id}": {
+      "result": { "message": "updated" },
+      "where": "users/{id}",
+      "body": {
+        "name": "name",
+        "lastName": "lastName",
+        "password": "password"
+      }
     }
   },
   "DELETE": {
