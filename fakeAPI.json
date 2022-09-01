@@ -1,129 +1,218 @@
 {
-  "GET": {
-    "all": {
-      "users": "users/{*}",
-      "departments": "departments/{*}"
+    "GET": {
+        "testfunc/{siteId}": {
+            "function": "test"
+        },
+        "store/{id}/status": {
+            "status": "Open",
+            "storeId": "{id}",
+            "address": "stores/{id}[address,city,state]"
+        },
+        "all": {
+            "users": "users/{*}",
+            "departments": "departments/{*}",
+            "stores": "stores/{*}"
+        },
+        "usernames": {
+            "users": "users/{*}[name]"
+        },
+        "itusers/{dip}": {
+            "users": "users/{dip}[name]: Object"
+        },
+        "departments": {
+            "departments": "departments/{*}[department]: Array"
+        }
     },
-    "usernames": {
-      "users": "users/{*}[name]"
+    "POST": {
+        "department/testpost/{employeeId}": {
+            "function": "testpost",
+            "body": {
+                "startDate": "2021-02-18",
+                "endDate": "2021-02-28"
+            }
+        },
+        "department/employee/{employeeId}": {
+            "queryonly": true,
+            "result": {
+                "some": "data",
+                "somemore": "data here",
+                "user": "users/{employeeId}"
+            },
+            "body": {
+                "startDate": "2021-02-18",
+                "endDate": "2021-02-28"
+            }
+        },
+        "departments": {
+            "result": {
+                "message": "created"
+            },
+            "where": "departments/{*}",
+            "body": {
+                "id": 1,
+                "department": "IT"
+            }
+        },
+        "createUser": {
+            "result": {
+                "message": "created"
+            },
+            "where": "users/{*}",
+            "body": {
+                "id": 1,
+                "name": "name",
+                "lastName": "lastName",
+                "username": "salih@gmail.com",
+                "password": "password"
+            }
+        }
+     
     },
-    "departments/{dip}/lastName/{lastName}": {
-      "users": "users/{dip,lastName}[name]: Object"
+    "PUT": {
+        "departments/{id}/name/{department}": {
+            "result": {
+                "message": "updated"
+            },
+            "where": "departments/{id,department}",
+            "body": {
+                "id": 1,
+                "department": "HR"
+            }
+        },
+        "updateUser/{lastName}/department/{dip}": {
+            "result": {
+                "message": "updated"
+            },
+            "where": "users/{dip,lastName}",
+            "body": {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1
+            }
+        }
     },
-    "departments": {
-      "departments": "departments/{*}[department]: Array"
-    }
-  },
-  "POST": {
-    "departments": {
-      "result": { "message": "created" },
-      "where": "departments/{*}",
-      "body": {
-        "id": 1,
-        "department": "IT"
-      }
+    "DELETE": {
+        "deleteUser/{id}": {
+            "result": {
+                "message": "deleted"
+            },
+            "where": "users/{id}"
+        },
+        "departments/{id}": {
+            "result": {
+                "message": "deleted"
+            },
+            "where": "departments/{id}"
+        }
     },
-    "createUser": {
-      "result": { "message": "created" },
-      "where": "users/{*}",
-      "body": {
-        "id": 1,
-        "name": "name",
-        "lastName": "lastName"
-      }
-    }
-  },
-  "PUT": {
-    "departments/{id}/name/{department}": {
-      "result": { "message": "updated" },
-      "where": "departments/{id,department}",
-      "body": {
-        "id": 1,
-        "department": "HR"
-      }
+    "ERROR": {
+        "404": {
+            "status": {
+                "code": "404",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "Not found.."
+                    }
+                ]
+            }
+        },
+        "500": {
+            "status": {
+                "code": "500",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "No response!"
+                    }
+                ]
+            }
+        }
     },
-    "updateUser/{id}": {
-      "result": { "message": "updated" },
-      "where": "users/{id}",
-      "body": {
-        "name": "name",
-        "lastName": "lastName",
-        "password": "password"
-      }
-    }
-  },
-  "DELETE": {
-    "deleteUser/{id}": {
-      "result": { "message": "deleted" },
-      "where": "users/{id}"
-    },
-    "departments/{id}": {
-      "result": { "message": "deleted" },
-      "where": "departments/{id}"
-    }
-  },
-  "ERROR": {
-    "401": {
-      "status": {
-        "code": "404",
-        "messages": [
-          {
-            "type": "Error",
-            "message": "Invalid Site#"
-          }
+    "DATA": {
+        "departments": {
+            "1": {
+                "id": 1,
+                "department": "IT"
+            },
+            "2": {
+                "id": 2,
+                "department": "HR"
+            },
+            "3": {
+                "id": 3,
+                "department": "MARKETING"
+            }
+        },
+        "users": [
+            {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "salih@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 1
+            },
+            {
+                "id": 2,
+                "name": "Sinan",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "sinan@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 2
+            },
+            {
+                "id": 3,
+                "name": "Semih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "semih@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 3
+            }
+            
+            
+        ],
+        "stores": [
+            {
+                "id": 1,
+                "address": "6301 Northwest Loop 410 #0S09",
+                "city": "San Antonio",
+                "state": "TX",
+                "zip": "78238",
+                "mall": "Ingram Park Mall"
+            },
+            {
+                "id": 2,
+                "address": "2310 SW Military Dr #315",
+                "city": "San Antonio",
+                "state": "TX",
+                "zip": "78224",
+                "mall": "South Park Mall"
+            },
+            {
+                "id": 3,
+                "address": "2310 SW Military Dr #315",
+                "city": "Lubbock",
+                "state": "TX",
+                "zip": "79414",
+                "mall": "South Plains Mall"
+            }
+            
+            
         ]
-      }
     },
-    "500": {
-      "status": {
-        "code": "500",
-        "messages": [
-          {
-            "type": "Error",
-            "message": "MAS/MMMe is not responding"
-          }
-        ]
-      }
+    "SETTING": {
+        "name": "systemtest",
+        "version": "",
+        "versionNumber": "1.0.0",
+        "headers": [],
+        "port": 4000
     }
-  },
-  "DATA": {
-    "departments": {
-      "1": { "id": 1, "department": "IT" },
-      "2": { "id": 2, "department": "HR" },
-      "3": { "id": 3, "department": "ENG" }
-    },
-    "users": [
-      {
-        "id": 1,
-        "name": "Salih",
-        "lastName": "Onder",
-        "dip": 1,
-        "username": "salih",
-        "password": "password"
-      },
-      {
-        "id": 2,
-        "name": "Semih",
-        "lastName": "Onder",
-        "dip": 1,
-        "username": "semih",
-        "password": "password"
-      },
-      {
-        "id": 3,
-        "name": "Sinan",
-        "lastName": "Onder",
-        "dip": 2,
-        "username": "sinan",
-        "password": "password"
-      }
-    ]
-  },
-  "SETTING": {
-    "name": "systemtest",
-    "version": "",
-    "versionNumber": "1.0.0",
-    "headers": [],
-    "port": 4000
-  }
 }

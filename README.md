@@ -2,10 +2,11 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.2.6-blue)
+![](https://img.shields.io/badge/version-v1.3.2-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
+![](https://img.shields.io/badge/postman-9.21.5-green)
 
 ## Setup
 
@@ -238,90 +239,229 @@ then request it for example like `/path:404`
 ```js
 // FETCH
 
-fetch('http://localhost:4000/systemtest/all')
+fetch("http://localhost:4000/systemtest/all")
   .then((res) => res.json())
   .then((res) => console.log(res));
 
-const credentials = 'sinan:password';
-fetch('http://localhost:4000/systemtest/authenticate', {
+const credentials = "sinan:password";
+fetch("http://localhost:4000/systemtest/authenticate", {
   headers: new Headers({
-    Authorization: 'Basic ' + btoa(credentials),
+    Authorization: "Basic " + btoa(credentials),
   }),
 })
   .then((res) => res.json())
   .then((res) => console.log(res));
 
-fetch('http://localhost:4000/systemtest/createUser', {
-  method: 'POST',
+fetch("http://localhost:4000/systemtest/createUser", {
+  method: "POST",
   body: JSON.stringify({
     id: 6,
-    name: 'new user',
-    lastName: 'new lastName',
+    name: "new user",
+    lastName: "new lastName",
   }),
 })
   .then((res) => res.json())
   .then((res) => console.log(res));
 
-fetch('http://localhost:4000/systemtest/updateUser/2', {
-  method: 'PUT',
+fetch("http://localhost:4000/systemtest/updateUser/2", {
+  method: "PUT",
   body: JSON.stringify({
-    name: 'name1',
-    lastName: 'lastName1',
-    password: 'password1',
+    name: "name1",
+    lastName: "lastName1",
+    password: "password1",
   }),
 })
   .then((res) => res.json())
   .then((res) => console.log(res));
 
-fetch('http://localhost:4000/systemtest/deleteUser/1', {
-  method: 'DELETE',
+fetch("http://localhost:4000/systemtest/deleteUser/1", {
+  method: "DELETE",
 })
   .then((res) => res.json())
   .then((res) => console.log(res));
 
 //AXIOS
 
-axios('http://localhost:4000/systemtest/all').then((res) => console.log(res.data));
+axios("http://localhost:4000/systemtest/all").then((res) =>
+  console.log(res.data)
+);
 
-const credentials = 'sinan:password';
-axios('http://localhost:4000/systemtest/authenticate', {
+const credentials = "sinan:password";
+axios("http://localhost:4000/systemtest/authenticate", {
   headers: {
-    Authorization: 'Basic ' + btoa(credentials),
+    Authorization: "Basic " + btoa(credentials),
   },
 }).then((res) => console.log(res.data));
 
 axios
-  .post('http://localhost:4000/systemtest/createUser', {
+  .post("http://localhost:4000/systemtest/createUser", {
     id: 7,
-    name: 'new user',
-    lastName: 'new lastName',
+    name: "new user",
+    lastName: "new lastName",
   })
   .then((res) => console.log(res.data));
 
 axios
-  .put('http://localhost:4000/systemtest/updateUser/2', {
-    name: 'name1',
-    lastName: 'lastName1',
-    password: 'password1',
+  .put("http://localhost:4000/systemtest/updateUser/2", {
+    name: "name1",
+    lastName: "lastName1",
+    password: "password1",
   })
   .then((res) => console.log(res.data));
 
 axios({
-  method: 'delete',
-  url: 'http://localhost:4000/systemtest/deleteUser/1',
+  method: "delete",
+  url: "http://localhost:4000/systemtest/deleteUser/1",
 });
 ```
 
 ### AUTHENTICATION
+
+`/authenticate`
 
 Basic Authentication is supported. In order to add/remove/update username and password of a user, see
 `DATA.users` section
 
 `http://localhost:4000/systemtest/authenticate`
 
+It will return user info on success, including tokens field.
+`tokens[0].auth` is a JWT token that you should send on each request as `Authorization` header
+with value of `'Bearer ' + tokens[0].auth`
+
+```
+"tokens": [	
+		{
+	    	   "auth": "",
+	    	   "geo": ""
+	    	   "job": ""
+		}	
+	]
+```
+
+`/signout`
+In order to sign out, just add Authorization header and make the request. A successfull response will be
+
+```json
+{"Signout successfully"}
+```
+
+`/refresh`
+In order to refresh your token, just add Authorization header and make the request. A successfull response will be
+
+```json
+{"tokens":[{"auth":"eyJ0eXAi...","expiration":720}],"session":"","referenceId":"","status":""}
+```
+
 ### HEADERS
 
 You can force each api to use certain headers on each request thru `SETTING.headers`
+
+### FUNCTIONS
+
+If you need more complicated process to manupulate the data, you may use functions feature.
+It works only on `GET` and `POST`
+
+
+Example
+
+- Create a function on functions.js like `test`
+
+Any function takes 2 paramaters, data and params. All query and body parameters will be included.
+
+
+```js
+const Functions = {
+    test: (data, params) => {
+        return `siteId ${params.siteId}`
+    },
+    testpost: (data, params) => {
+        return `START DATE ${params.startDate} for EMPLOYEE employeeId ${params.employeeId}`
+    }
+}
+
+module.exports = Functions;
+```
+
+- on GET request modify endpoints like this on file fakeAPI.json
+```js
+...
+"GET": {
+        "testfunc/{siteId}": {
+            "function": "test"
+        },
+...
+```
+
+- on POST request modify endpoints like this on file fakeAPI.json
+```js
+...
+"POST": {
+"jobs/testpost/{employeeId}": {
+            "function": "testpost",
+            "body": {
+                "startDate": "2021-02-18",
+            }
+        },
+...
+
+
+```
+
+### POSTMAN
+
+You can automatically convert all APIs to postman collection with environment variables.
+You will need one of the environment variables at least.
+
+- Postman Collection
+- Local Environment Variables
+- Development Environment Variables
+
+### CLOUD
+
+`Set up on a AWS VM`
+
+- Create an EC2 linux VM
+- Install Node
+- Create a folder named `fakeapiexample`
+- `npm init` to create the package.json
+- Install simpleake api package from a zip file or from repo
+- Create fakeAPI.json file and copy content from example content on this README file `vim fakeAPI.json`
+- go to service folder `cd /lib/systemd/system`
+- create service file `vim fakeapi.service`
+- Paste content below
+
+```
+[Unit]
+Description=Simple fake API service
+Documentation=https://www.npmjs.com/package/simplefakeapi
+After=network.target
+
+[Service]
+Environment=NODE_PORT=4000
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/script.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+- Go to `/usr/bin/` `cd /usr/bin/`
+- Create a shell file for service to use `vim script.sh`
+- Copy content below;
+
+```sh
+#!/bin/bash
+cd /home/ubuntu/fakeapiexample
+set +e
+/home/ubuntu/.nvm/versions/node/v18.3.0/bin/npx fakeapi
+set -e
+```
+- systemctl daemon-reload
+- systemctl start fakapi
+- systemctl status fakapi
+- Open the port 4000 of VM
 
 ## Author
 

@@ -1,6 +1,6 @@
 {
   "name": "simplefakeapi",
-  "version": "1.2.6",
+  "version": "1.3.2",
   "description": "Creates a simple fake REST API from a single json file.",
   "main": "cli.js",
   "bin": {
@@ -23,5 +23,9 @@
     "type": "git",
     "url": "https://github.com/salihonder/simpleFakeRESTAPI.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "njwt": "^1.2.0",
+    "secure-random": "^1.1.2"
+  }
 }
