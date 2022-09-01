@@ -250,8 +250,6 @@ const GET_Router = (route, response, body, headers) => {
             ...foundUser, tokens: [
               {
                 auth: tokenObj.token,
-                geo: utils.getJWT(foundUser.username, API.DATA).token,
-                job: utils.getJWT(foundUser.username, API.DATA).token,
                 expiration: tokenObj.expiration / (60 * 1000)
               }
             ],

@@ -14,13 +14,16 @@ Creates a simple fake REST API from a single json file.
 - Add script `"fakeapi": "npx fakeapi"` to package.json
 - npm run fakeapi
 
+Check your APIs on `http://localhost:4000/systemtest` by default.
+
 Your service will be run on `http://localhost:4000`
 
 ## Display APIs
 
 Base on your `fakeAPI.json` SETTINGS
 
-![](https://i.ibb.co/3FQJ7rQ/apiss.png)
+![](https://i.ibb.co/cNbZPv1/Screen-Shot-2022-09-01-at-12-28-32-AM.png)
+
 
 http://localhost:{port}/{name}/{version}
 if you pass SETTINGS.version as empty or remove it path will be
@@ -331,9 +334,7 @@ with value of `'Bearer ' + tokens[0].auth`
 ```
 "tokens": [	
 		{
-	    	   "auth": "",
-	    	   "geo": ""
-	    	   "job": ""
+	    	   "auth": ""
 		}	
 	]
 ```
@@ -408,6 +409,9 @@ module.exports = Functions;
 ```
 
 ### POSTMAN
+
+![](https://i.ibb.co/KzHjhKR/Screen-Shot-2022-09-01-at-12-37-11-AM.png)
+
 
 You can automatically convert all APIs to postman collection with environment variables.
 You will need one of the environment variables at least.
