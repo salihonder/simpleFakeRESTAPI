@@ -2,7 +2,7 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.3.2-blue)
+![](https://img.shields.io/badge/version-v1.3.3-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
