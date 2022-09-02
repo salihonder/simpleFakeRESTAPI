@@ -2,15 +2,22 @@
 
 Creates a simple fake REST API from a single json file.
 
-![](https://img.shields.io/badge/version-v1.3.3-blue)
+![](https://img.shields.io/badge/version-v1.3.4-blue)
 ![](https://img.shields.io/badge/node-v16.13.1-green)
 ![](https://img.shields.io/badge/npm-8.1.2-green)
 ![](https://img.shields.io/badge/react-17.0.2-green)
 ![](https://img.shields.io/badge/postman-9.21.5-green)
 
+- Exporting to Postman as a collection with variables
+- Advance built-in queries
+- Functions for GET and POST endpoints
+- Deploying to VMs
+- Auth, Signout, and Refresh
+- Session management
+
 ## Setup
 
-- Make sure you create a file named fakeAPI.json with content on your project's root folder. You can see the content of the file below.
+- Make sure you create a file named **fakeAPI.json** with content on your project's root folder. You can see the content of the file below.
 - Add script `"fakeapi": "npx fakeapi"` to package.json
 - npm run fakeapi
 
@@ -20,7 +27,7 @@ Your service will be run on `http://localhost:4000`
 
 ## Display APIs
 
-Base on your `fakeAPI.json` SETTINGS
+Base on your **fakeAPI.json** SETTINGS
 
 ![](https://i.ibb.co/cNbZPv1/Screen-Shot-2022-09-01-at-12-28-32-AM.png)
 
@@ -32,115 +39,228 @@ http://localhost:{port}/{name}
 
 ## Documentation
 
-Create a file named fakeAPI.json with content same as below
+Create a file named **fakeAPI.json** with content same as below
 
-Modify fakeAPI.json base on your API choice
+Modify **fakeAPI.json** base on your API choice
 
 ```json
 {
-  "GET": {
-    "all": {
-      "users": "users/{*}",
-      "departments": "departments/{*}",
-      "systems": "systems/{*}"
+    "GET": {
+        "testfunc/{siteId}": {
+            "function": "test"
+        },
+        "store/{id}/status": {
+            "status": "Open",
+            "storeId": "{id}",
+            "address": "stores/{id}[address,city,state]"
+        },
+        "all": {
+            "users": "users/{*}",
+            "departments": "departments/{*}",
+            "stores": "stores/{*}"
+        },
+        "usernames": {
+            "users": "users/{*}[name]"
+        },
+        "itusers/{dip}": {
+            "users": "users/{dip}[name]: Object"
+        },
+        "departments": {
+            "departments": "departments/{*}[department]: Array"
+        }
     },
-    "usernames": {
-      "users": "users/{*}[name]"
+    "POST": {
+        "department/testpost/{employeeId}": {
+            "function": "testpost",
+            "body": {
+                "startDate": "2021-02-18",
+                "endDate": "2021-02-28"
+            }
+        },
+        "department/employee/{employeeId}": {
+            "queryonly": true,
+            "result": {
+                "some": "data",
+                "somemore": "data here",
+                "user": "users/{employeeId}"
+            },
+            "body": {
+                "startDate": "2021-02-18",
+                "endDate": "2021-02-28"
+            }
+        },
+        "departments": {
+            "result": {
+                "message": "created"
+            },
+            "where": "departments/{*}",
+            "body": {
+                "id": 1,
+                "department": "IT"
+            }
+        },
+        "createUser": {
+            "result": {
+                "message": "created"
+            },
+            "where": "users/{*}",
+            "body": {
+                "id": 1,
+                "name": "name",
+                "lastName": "lastName",
+                "username": "salih@gmail.com",
+                "password": "password"
+            }
+        }
+     
     },
-    "itusers/{dip}": {
-      "users": "users/{dip}[name]: Object"
+    "PUT": {
+        "departments/{id}/name/{department}": {
+            "result": {
+                "message": "updated"
+            },
+            "where": "departments/{id,department}",
+            "body": {
+                "id": 1,
+                "department": "HR"
+            }
+        },
+        "updateUser/{lastName}/department/{dip}": {
+            "result": {
+                "message": "updated"
+            },
+            "where": "users/{dip,lastName}",
+            "body": {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1
+            }
+        }
     },
-    "departments": {
-      "departments": "departments/{*}[department]: Array"
-    }
-  },
-  "POST": {
-    "departments": {
-      "result": { "message": "created" },
-      "where": "departments/{*}",
-      "body": {
-        "id": 1,
-        "department": "IT"
-      }
+    "DELETE": {
+        "deleteUser/{id}": {
+            "result": {
+                "message": "deleted"
+            },
+            "where": "users/{id}"
+        },
+        "departments/{id}": {
+            "result": {
+                "message": "deleted"
+            },
+            "where": "departments/{id}"
+        }
     },
-    "createUser": {
-      "result": { "message": "created" },
-      "where": "users/{*}",
-      "body": {
-        "id": 1,
-        "name": "name",
-        "lastName": "lastName"
-      }
-    }
-  },
-  "PUT": {
-    "departments/{id}/name/{department}": {
-      "result": { "message": "updated" },
-      "where": "departments/{id,department}",
-      "body": {
-        "id": 1,
-        "department": "HR"
-      }
-    }
-  },
-  "DELETE": {
-    "deleteUser/{id}": {
-      "result": { "message": "deleted" },
-      "where": "users/{id}"
+    "ERROR": {
+        "404": {
+            "status": {
+                "code": "404",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "Not found.."
+                    }
+                ]
+            }
+        },
+        "500": {
+            "status": {
+                "code": "500",
+                "messages": [
+                    {
+                        "type": "Error",
+                        "message": "No response!"
+                    }
+                ]
+            }
+        }
     },
-    "departments/{id}": {
-      "result": { "message": "deleted" },
-      "where": "departments/{id}"
-    }
-  },
-  "ERROR": {
-    "401": {
-      "status": {
-        "code": "404",
-        "messages": [
-          {
-            "type": "Error",
-            "message": "Invalid Site#"
-          }
+    "DATA": {
+        "departments": {
+            "1": {
+                "id": 1,
+                "department": "IT"
+            },
+            "2": {
+                "id": 2,
+                "department": "HR"
+            },
+            "3": {
+                "id": 3,
+                "department": "MARKETING"
+            }
+        },
+        "users": [
+            {
+                "id": 1,
+                "name": "Salih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "salih@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 1
+            },
+            {
+                "id": 2,
+                "name": "Sinan",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "sinan@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 2
+            },
+            {
+                "id": 3,
+                "name": "Semih",
+                "lastName": "Onder",
+                "dip": 1,
+                "username": "semih@gmail.com",
+                "password": "password",
+                "companyid": 1,
+                "employeeid": 3
+            }
+            
+            
+        ],
+        "stores": [
+            {
+                "id": 1,
+                "address": "6301 Northwest Loop 410",
+                "city": "San Antonio",
+                "state": "TX",
+                "zip": "78238",
+                "mall": "Ingram Park Mall"
+            },
+            {
+                "id": 2,
+                "address": "2310 SW Military Dr",
+                "city": "San Antonio",
+                "state": "TX",
+                "zip": "78224",
+                "mall": "South Park Mall"
+            },
+            {
+                "id": 3,
+                "address": "2310 SW Military Dr",
+                "city": "Lubbock",
+                "state": "TX",
+                "zip": "79414",
+                "mall": "South Plains Mall"
+            }
+            
+            
         ]
-      }
     },
-    "500": {
-      "status": {
-        "code": "500",
-        "messages": [
-          {
-            "type": "Error",
-            "message": "MAS/MMMe is not responding"
-          }
-        ]
-      }
+    "SETTING": {
+        "name": "systemtest",
+        "version": "",
+        "versionNumber": "1.0.0",
+        "headers": [],
+        "port": 4000
     }
-  },
-  "DATA": {
-    "departments": {
-      "1": { "id": 1, "department": "IT" },
-      "2": { "id": 2, "department": "HR" },
-      "3": { "id": 3, "department": "ENG" }
-    },
-    "users": [
-      { "id": 1, "name": "Salih", "lastName": "Onder", "dip": 1 },
-      { "id": 2, "name": "Semih", "lastName": "Onder", "dip": 1 },
-      { "id": 3, "name": "Sinan", "lastName": "Onder", "dip": 2 }
-    ]
-  },
-  "SETTING": {
-    "name": "systemtest",
-    "version": "",
-    "versionNumber": "1.0.0",
-    "headers": ["tracing_id"],
-    "authenticate": {
-      "username": "username",
-      "password": "password",
-      "result": { "id": 1, "name": "name", "lastName": "lastName" }
-    },
-    "port": 4000
-  }
 }
 ```
 
@@ -221,7 +341,7 @@ Modify fakeAPI.json base on your API choice
 
 ### OTHER RESPONSES
 
-in order to make 404 etc responses, create a section under `ERROR` in fakeAPI.json as,
+in order to make 404 etc responses, create a section under `ERROR` in **fakeAPI.json** as,
 
 ```json
 "404": {
@@ -365,7 +485,7 @@ It works only on `GET` and `POST`
 
 Example
 
-- Create a function on functions.js like `test`
+- Create a function on **functions.js** like `test`
 
 Any function takes 2 paramaters, data and params. All query and body parameters will be included.
 
@@ -383,7 +503,7 @@ const Functions = {
 module.exports = Functions;
 ```
 
-- on GET request modify endpoints like this on file fakeAPI.json
+- on GET request modify endpoints like this on file **fakeAPI.json**
 ```js
 ...
 "GET": {
@@ -393,7 +513,7 @@ module.exports = Functions;
 ...
 ```
 
-- on POST request modify endpoints like this on file fakeAPI.json
+- on POST request modify endpoints like this on file **fakeAPI.json**
 ```js
 ...
 "POST": {
@@ -429,7 +549,7 @@ You will need one of the environment variables at least.
 - Create a folder named `fakeapiexample`
 - `npm init` to create the package.json
 - Install simpleake api package from a zip file or from repo
-- Create fakeAPI.json file and copy content from example content on this README file `vim fakeAPI.json`
+- Create **fakeAPI.json** file and copy content from example content on this README file `vim fakeAPI.json`
 - go to service folder `cd /lib/systemd/system`
 - create service file `vim fakeapi.service`
 - Paste content below

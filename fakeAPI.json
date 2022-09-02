@@ -182,7 +182,7 @@
         "stores": [
             {
                 "id": 1,
-                "address": "6301 Northwest Loop 410 #0S09",
+                "address": "6301 Northwest Loop 410",
                 "city": "San Antonio",
                 "state": "TX",
                 "zip": "78238",
@@ -190,7 +190,7 @@
             },
             {
                 "id": 2,
-                "address": "2310 SW Military Dr #315",
+                "address": "2310 SW Military Dr",
                 "city": "San Antonio",
                 "state": "TX",
                 "zip": "78224",
@@ -198,7 +198,7 @@
             },
             {
                 "id": 3,
-                "address": "2310 SW Military Dr #315",
+                "address": "2310 SW Military Dr",
                 "city": "Lubbock",
                 "state": "TX",
                 "zip": "79414",

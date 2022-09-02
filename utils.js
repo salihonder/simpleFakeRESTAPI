@@ -181,7 +181,7 @@ const generatePostmanC = (API) => {
 const postmanObject = {
   "info": {
 		"_postman_id": uuid(),
-		"name": "FakeAPI 1.3.3 export",
+		"name": "FakeAPI 1.3.4 export",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20589014"
 	},

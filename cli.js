@@ -161,9 +161,9 @@ const GET_Router = (route, response, body, headers) => {
         <hr />
         <h2>Postman Collection and Environment</h2>
         <hr />
-        <h3 id="postman"> <a href="${"data:text/json;charset=utf-8," + encodeURIComponent(utils.generatePostmanC(API))}" download="fakeapi-v1.3.3.postman_collection.json">Download Postman Collection</a></h3>
+        <h3 id="postman"> <a href="${"data:text/json;charset=utf-8," + encodeURIComponent(utils.generatePostmanC(API))}" download="fakeapi-v1.3.4.postman_collection.json">Download Postman Collection</a></h3>
         <h3 > <a href="${"data:text/json;charset=utf-8," + encodeURIComponent(utils.generatePostmanEnvObject(API, 'LOCAL'))}"
-         download="fakeapi_v1.3.3_local.postman_environment.json">Download Local Environment Variables</a></h3> 
+         download="fakeapi_v1.3.4_local.postman_environment.json">Download Local Environment Variables</a></h3> 
       
         <hr />
         <h2>${root}</h2>
@@ -543,7 +543,7 @@ const PORT = API.SETTING.port || 4001;
 // start server
 server.listen(PORT, () => {
   console.log(`======================`);
-  console.log(`Simple Fake API v1.3.3`);
+  console.log(`Simple Fake API v1.3.4`);
   console.log(`======================`);
   console.log(`Server listening on: http://localhost:${PORT}`);
   console.log('Press Ctrl + C to exit');
