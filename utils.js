@@ -40,62 +40,62 @@ const BODY_POSTMAN_COLLECTION_OBJ = {
 };
 
 const ENVIRONMENT_VARIABLES = {
-	"id": "",
-	"name": "",
-	"values": [
-		{
-			"key": "BASE_URL",
-			"value": "",
-			"type": "default",
-			"enabled": true
-		},
-		{
-			"key": "PORT",
-			"value": "",
-			"type": "default",
-			"enabled": true
-		},
-		{
-			"key": "API_NAME",
-			"value": "",
-			"type": "default",
-			"enabled": true
-		},
-		{
-			"key": "USERNAME",
-			"value": "",
-			"type": "default",
-			"enabled": true
-		},
-		{
-			"key": "PASSWORD",
-			"value": "",
-			"type": "default",
-			"enabled": true
-		},
+  "id": "",
+  "name": "",
+  "values": [
     {
-			"key": "AUTH_TOKEN",
-			"value": "", 
-			"type": "default",
-			"enabled": true
-		}
-	],
-	"_postman_variable_scope": "environment",
-	"_postman_exported_at": new Date().toISOString(),
-	"_postman_exported_using": "Postman/9.21.5"
+      "key": "BASE_URL",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "PORT",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "API_NAME",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "USERNAME",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "PASSWORD",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "AUTH_TOKEN",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": new Date().toISOString(),
+  "_postman_exported_using": "Postman/9.21.5"
 }
 
 function uuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
 
-const generatePostmanObject =(API) =>{
- 
+const generatePostmanObject = (API) => {
+
   const GETS = Object.keys(API.GET).map(name => {
-    let obj = {...GET_POSTMAN_COLLECTION_OBJ};
+    let obj = { ...GET_POSTMAN_COLLECTION_OBJ };
     obj.name = name[0].toUpperCase() + name.substring(1);
     obj.request.method = "GET";
     obj.request.url.raw = `{{BASE_URL}}{{PORT}}{{API_NAME}}/${name}`;
@@ -104,17 +104,17 @@ const generatePostmanObject =(API) =>{
     return JSON.parse(JSON.stringify(obj));
   });
 
-  
+
   const POSTS = Object.keys(API.POST).map(name => {
-    let obj = {...GET_POSTMAN_COLLECTION_OBJ};
+    let obj = { ...GET_POSTMAN_COLLECTION_OBJ };
     obj.name = name[0].toUpperCase() + name.substring(1);
     obj.request.method = "POST";
     obj.request.url.raw = `{{BASE_URL}}{{PORT}}{{API_NAME}}/${name}`;
 
     obj.request.url.path = [name];
 
-    const bodyObj = {...BODY_POSTMAN_COLLECTION_OBJ};
-    bodyObj.body.raw  = JSON.stringify(API.POST[name].body);
+    const bodyObj = { ...BODY_POSTMAN_COLLECTION_OBJ };
+    bodyObj.body.raw = JSON.stringify(API.POST[name].body);
 
     obj.request.body = bodyObj.body;
 
@@ -122,15 +122,15 @@ const generatePostmanObject =(API) =>{
   });
 
   const PUTS = Object.keys(API.PUT).map(name => {
-    let obj = {...GET_POSTMAN_COLLECTION_OBJ};
+    let obj = { ...GET_POSTMAN_COLLECTION_OBJ };
     obj.name = name[0].toUpperCase() + name.substring(1);
     obj.request.method = "PUT";
     obj.request.url.raw = `{{BASE_URL}}{{PORT}}{{API_NAME}}/${name}`;
 
     obj.request.url.path = [name];
 
-    const bodyObj = {...BODY_POSTMAN_COLLECTION_OBJ};
-    bodyObj.body.raw  = JSON.stringify(API.PUT[name].body);
+    const bodyObj = { ...BODY_POSTMAN_COLLECTION_OBJ };
+    bodyObj.body.raw = JSON.stringify(API.PUT[name].body);
 
     obj.request.body = bodyObj.body;
 
@@ -138,7 +138,7 @@ const generatePostmanObject =(API) =>{
   });
 
   const DELS = Object.keys(API.DELETE).map(name => {
-    let obj = {...GET_POSTMAN_COLLECTION_OBJ};
+    let obj = { ...GET_POSTMAN_COLLECTION_OBJ };
     obj.name = name[0].toUpperCase() + name.substring(1);
     obj.request.method = "DELETE";
     obj.request.url.raw = `{{BASE_URL}}{{PORT}}{{API_NAME}}/${name}`;
@@ -149,25 +149,25 @@ const generatePostmanObject =(API) =>{
     return JSON.parse(JSON.stringify(obj));
   });
 
- 
-  return {GETS,POSTS,PUTS,DELS};
+
+  return { GETS, POSTS, PUTS, DELS };
 }
 
 const generatePostmanEnvObject = (API, ENV_NAME) => {
   const Environment_Obj = JSON.parse(JSON.stringify(ENVIRONMENT_VARIABLES));
 
   Environment_Obj.id = uuid();
-  Environment_Obj.name = ENV_NAME == "LOCAL" ? "Local" :  "Development";
+  Environment_Obj.name = ENV_NAME == "LOCAL" ? "Local" : "Development";
   // BASE_URL
   Environment_Obj.values[0].value = ENV_NAME == "LOCAL" ? "http://localhost" : API.SETTING.devURL;
   // PORT
-  Environment_Obj.values[1].value = ENV_NAME == "LOCAL" ? ":" + API.SETTING.port: ":" + API.SETTING.devPort;
+  Environment_Obj.values[1].value = ENV_NAME == "LOCAL" ? ":" + API.SETTING.port : ":" + API.SETTING.devPort;
   // API_NAME
-  Environment_Obj.values[2].value =  "/"+API.SETTING.name;
+  Environment_Obj.values[2].value = "/" + API.SETTING.name;
   // USERNAME
-  Environment_Obj.values[3].value =  API.DATA.users[0].username;
+  Environment_Obj.values[3].value = API.DATA.users[0].username;
   // PASSWORD
-  Environment_Obj.values[4].value =  API.DATA.users[0].password;
+  Environment_Obj.values[4].value = API.DATA.users[0].password;
 
   return JSON.stringify(Environment_Obj);
 }
@@ -178,128 +178,128 @@ const generatePostmanC = (API) => {
   // const LOCAL_ENVIRONMENT = generatePostmanEnvObject(API, 'LOCAL');
   // const DEV_ENVIRONMENT = generatePostmanEnvObject(API, "DEV");
 
-const postmanObject = {
-  "info": {
-		"_postman_id": uuid(),
-		"name": "FakeAPI 1.3.4 export",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20589014"
-	},
-  "item": [
-    {
-			"name": "Auth",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"",
-							"var jsonData = pm.response.json();",
-							"",
-							"pm.environment.set(\"AUTH_TOKEN\", jsonData.tokens[0].auth);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "{{PASSWORD}}",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "{{USERNAME}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/authenticate",
-					"host": [
-						"{{BASE_URL}}{{PORT}}{{API_NAME}}"
-					],
-					"path": [
-						"authenticate"
-					]
-				}
-			},
-			"response": []
-		},
-    {
-			"name": "Signout",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{AUTH_TOKEN}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/signout",
-					"host": [
-						"{{BASE_URL}}{{PORT}}{{API_NAME}}"
-					],
-					"path": [
-						"signout"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Refresh",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();",
-							"",
-							"pm.environment.set(\"AUTH_TOKEN\", jsonData.tokens[0].auth);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer {{AUTH_TOKEN}}",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/refresh",
-					"host": [
-						"{{BASE_URL}}{{PORT}}{{API_NAME}}"
-					],
-					"path": [
-						"refresh"
-					]
-				}
-			},
-			"response": []
-		},
-  ]
-}
+  const postmanObject = {
+    "info": {
+      "_postman_id": uuid(),
+      "name": "FakeAPI 1.3.5 export",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "_exporter_id": "20589014"
+    },
+    "item": [
+      {
+        "name": "Auth",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "",
+                "var jsonData = pm.response.json();",
+                "",
+                "pm.environment.set(\"AUTH_TOKEN\", jsonData.tokens[0].auth);"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "auth": {
+            "type": "basic",
+            "basic": [
+              {
+                "key": "password",
+                "value": "{{PASSWORD}}",
+                "type": "string"
+              },
+              {
+                "key": "username",
+                "value": "{{USERNAME}}",
+                "type": "string"
+              }
+            ]
+          },
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/authenticate",
+            "host": [
+              "{{BASE_URL}}{{PORT}}{{API_NAME}}"
+            ],
+            "path": [
+              "authenticate"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Signout",
+        "request": {
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{AUTH_TOKEN}}",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/signout",
+            "host": [
+              "{{BASE_URL}}{{PORT}}{{API_NAME}}"
+            ],
+            "path": [
+              "signout"
+            ]
+          }
+        },
+        "response": []
+      },
+      {
+        "name": "Refresh",
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var jsonData = pm.response.json();",
+                "",
+                "pm.environment.set(\"AUTH_TOKEN\", jsonData.tokens[0].auth);"
+              ],
+              "type": "text/javascript"
+            }
+          }
+        ],
+        "request": {
+          "method": "GET",
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer {{AUTH_TOKEN}}",
+              "type": "text"
+            }
+          ],
+          "url": {
+            "raw": "{{BASE_URL}}{{PORT}}{{API_NAME}}/refresh",
+            "host": [
+              "{{BASE_URL}}{{PORT}}{{API_NAME}}"
+            ],
+            "path": [
+              "refresh"
+            ]
+          }
+        },
+        "response": []
+      },
+    ]
+  }
 
-postmanObject.item = [...postmanObject.item, ...REQUESTS.GETS, ...REQUESTS.POSTS, ...REQUESTS.PUTS, ...REQUESTS.DELS];
- return JSON.stringify(postmanObject);
- // If file needs to be written
-// fs.writeFileSync('fakeapi_v1.3.1.postman_collection.json', data);
-// fs.writeFileSync('fakeapi_v1.3.1_local.postman_environment.json', LOCAL_ENVIRONMENT);
-// fs.writeFileSync('fakeapi_v1.3.1_dev.postman_environment.json', DEV_ENVIRONMENT);
+  postmanObject.item = [...postmanObject.item, ...REQUESTS.GETS, ...REQUESTS.POSTS, ...REQUESTS.PUTS, ...REQUESTS.DELS];
+  return JSON.stringify(postmanObject);
+  // If file needs to be written
+  // fs.writeFileSync('fakeapi_v1.3.1.postman_collection.json', data);
+  // fs.writeFileSync('fakeapi_v1.3.1_local.postman_environment.json', LOCAL_ENVIRONMENT);
+  // fs.writeFileSync('fakeapi_v1.3.1_dev.postman_environment.json', DEV_ENVIRONMENT);
 
 }
 
