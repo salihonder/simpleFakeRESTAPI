@@ -12,7 +12,7 @@ const appRoot = path.resolve('');
 // API file for data, endpoints and settings
 const API = require(`${appRoot}/fakeAPI.json`);
 const { name, version, versionNumber } = API.SETTING;
-const Functions = require('./functions');
+const Functions = require(`${appRoot}/functions`);
 
 // Emitter for routing
 const myEmitter = new events.EventEmitter();
@@ -69,7 +69,7 @@ const requestListener = (request, response) => {
 
         const root = version ? `/${name}/${version}` : `/${name}`;
         const isRoot = root == url || `${root}/` == url ? true : false;
-       
+
 
         if (isRoot || url.split('/')[2] == 'authenticate') {
 
@@ -360,7 +360,7 @@ const POST_Router = (route, response, body, headers) => {
                 response.write(`{"path": "${endpoint}", "data": "error on post"}`);
               }
             } else {
-              console.log("API.POST[endpoint].function ",API.POST[endpoint].function );
+              console.log("API.POST[endpoint].function ", API.POST[endpoint].function);
               if (API.POST[endpoint].function !== undefined && API.POST[endpoint].function !== '') {
                 console.log("HERE....")
                 const params = { ...utils.getQueryParams(name, version, endpoint, route), ...body }
